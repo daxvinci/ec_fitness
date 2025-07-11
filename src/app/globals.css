@@ -24,3 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.gym-bg{
+  background-image: url("/images/gym_bg.jpg");
+}
