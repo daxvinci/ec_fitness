@@ -1,5 +1,6 @@
 export type UserDetails = {
-    name:string;
+    firstName:string;
+    lastName:string;
     date:Date;
     email:string;
     number:string;
