@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const adminDashboard = () => {
     return (
       <>
@@ -7,7 +9,9 @@ const adminDashboard = () => {
               <div className="flex h-16 items-center justify-between">
                 <div className="flex items-center">
                   <div className="shrink-0">
-                    <img
+                    <Image
+                      width={20}
+                      height={20}
                       className="size-8"
                       src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
                       alt="Your Company"
@@ -84,7 +88,9 @@ const adminDashboard = () => {
                         >
                           <span className="absolute -inset-1.5"></span>
                           <span className="sr-only">Open user menu</span>
-                          <img
+                          <Image
+                            width={20}
+                            height={20}
                             className="size-8 rounded-full"
                             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                             alt=""
@@ -209,7 +215,9 @@ const adminDashboard = () => {
               <div className="border-t border-gray-700 pt-4 pb-3">
                 <div className="flex items-center px-5">
                   <div className="shrink-0">
-                    <img
+                    <Image
+                      width={20}
+                      height={20}
                       className="size-10 rounded-full"
                       src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                       alt=""
