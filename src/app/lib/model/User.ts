@@ -1,19 +1,13 @@
-import { Schema, Document, models, model } from "mongoose";
+import { Schema, models, model } from "mongoose";
+import { UserDetails } from "../types";
 
-export interface IUser extends Document {
-  firstName: string;
-  lastName: string;
-  date: Date;
-  email: string;
-  number: string;
-  password?: string;
-}
 
-const UserSchema = new Schema<IUser>(
+
+const UserSchema = new Schema<UserDetails>(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    date: { type: Date, required: true },
+    date: { type: Date, default:Date.now, required: true },
     email: { type: String, required: true, unique: true },
     number: { type: String, required: true },
     password: { type: String }, // optional
@@ -21,6 +15,15 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-const User = models.User || model<IUser>("User", UserSchema);
+UserSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+UserSchema.set("toJSON", {
+  virtuals: true,
+});
+
+
+const User = models.User || model<UserDetails>("User", UserSchema);
 
 export default User;

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const adminDashboard = () => {
+const AdminDashboard = () => {
     return (
       <>
         <div className="min-h-full">
@@ -13,7 +13,7 @@ const adminDashboard = () => {
                       width={20}
                       height={20}
                       className="size-8"
-                      src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                      src="/images/geekwitch.jpg"
                       alt="Your Company"
                     />
                   </div>
@@ -92,7 +92,7 @@ const adminDashboard = () => {
                             width={20}
                             height={20}
                             className="size-8 rounded-full"
-                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            src="/images/geekwitch.jpg"
                             alt=""
                           />
                         </button>
@@ -219,7 +219,7 @@ const adminDashboard = () => {
                       width={20}
                       height={20}
                       className="size-10 rounded-full"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      src="/images/geekwitch.jpg"
                       alt=""
                     />
                   </div>
@@ -294,4 +294,4 @@ const adminDashboard = () => {
     );
 }
  
-export default adminDashboard;
+export default AdminDashboard;

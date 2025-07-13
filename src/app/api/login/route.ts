@@ -1,19 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/app/lib/dbConnect";
-import Admin from "@/app/lib/model/Admin";
+import User from "@/app/lib/model/User";
+import { UserDetails } from "@/app/lib/types";
 import bcrypt from "bcrypt"
-import { AdminDetails } from "@/app/lib/types";
 
 export async function POST(req: NextRequest) {
   await dbConnect();
 
   const body = await req.json();
-  const { email, password} = body;
+  const { email, password } = body;
 
-  try{
-
-    const user = await Admin.findOne<AdminDetails>({ email});
-    if(!user){
+  try {
+    const user = await User.findOne<UserDetails>({ email });
+    if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 200 });
     }
     const correctPassword = await bcrypt.compare(password, user.password);
@@ -28,10 +27,8 @@ export async function POST(req: NextRequest) {
       { message: "Login successful", success: true, user },
       { status: 200 }
     );
-
-  }catch(err){
-    console.log(err)
+  } catch (err) {
+    console.log(err);
     return NextResponse.json({ message: "error check logs" });
   }
-
 }

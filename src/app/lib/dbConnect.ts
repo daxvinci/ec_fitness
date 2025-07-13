@@ -1,27 +1,21 @@
 import mongoose from "mongoose";
 
-if (!process.env.DB_CONNECTION_STRING) {
-  throw new Error("DB_CONNECTION_STRING not defined!");
-}
-
-const MONGODB_URI = process.env.DB_CONNECTION_STRING;
-
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
+let isConnected: boolean = false;
 
 async function dbConnect() {
-  if (cached.conn) return cached.conn;
+  
+  if (isConnected) return;
+  
+  try{
 
-  if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(MONGODB_URI!)
-      .then((mongoose) => mongoose);
+      const connect = await mongoose.connect(process.env.DB_CONNECTION_STRING!);
+      isConnected = true;
+      console.log("connected to db with db strings : " + {connect})
+      // console.log("connected to db somehow");
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
+  catch(err){
+    console.log("error connecting to db: " + err)
+  }
 }
 
 export default dbConnect;
