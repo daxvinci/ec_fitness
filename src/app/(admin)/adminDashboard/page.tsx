@@ -1,297 +1,191 @@
-import Image from "next/image";
+"use client"
+
+import Navbar from "@/app/components/Navbar";
+import { Users } from "@/app/lib/types";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const AdminDashboard = () => {
-    return (
-      <>
-        <div className="min-h-full">
-          <nav className="bg-gray-800">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="flex h-16 items-center justify-between">
-                <div className="flex items-center">
-                  <div className="shrink-0">
-                    <Image
-                      width={20}
-                      height={20}
-                      className="size-8"
-                      src="/images/geekwitch.jpg"
-                      alt="Your Company"
-                    />
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="ml-10 flex items-baseline space-x-4">
-                      <a
-                        href="#"
-                        className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
-                        aria-current="page"
-                      >
-                        Dashboard
-                      </a>
-                      <a
-                        href="#"
-                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                      >
-                        Team
-                      </a>
-                      <a
-                        href="#"
-                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                      >
-                        Projects
-                      </a>
-                      <a
-                        href="#"
-                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                      >
-                        Calendar
-                      </a>
-                      <a
-                        href="#"
-                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                      >
-                        Reports
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div className="hidden md:block">
-                  <div className="ml-4 flex items-center md:ml-6">
-                    <button
-                      type="button"
-                      className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
-                    >
-                      <span className="absolute -inset-1.5"></span>
-                      <span className="sr-only">View notifications</span>
-                      <svg
-                        className="size-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-                        />
-                      </svg>
-                    </button>
+  // const users = [
+  //   {
+  //     id: "1",
+  //     name: "John",
+  //     surname: "Doe",
+  //     phone: "+1 (555) 123-4567",
+  //     startDate: "2023-01-15",
+  //     expirationDate: "2024-01-14",
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Jane",
+  //     surname: "Smith",
+  //     phone: "+1 (555) 987-6543",
+  //     startDate: "2023-03-22",
+  //     expirationDate: "2024-03-21",
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Robert",
+  //     surname: "Johnson",
+  //     phone: "+1 (555) 456-7890",
+  //     startDate: "2023-05-10",
+  //     expirationDate: "2024-05-09",
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "Emily",
+  //     surname: "Williams",
+  //     phone: "+1 (555) 789-0123",
+  //     startDate: "2023-07-18",
+  //     expirationDate: "2024-07-17",
+  //   },
+  //   {
+  //     id: "5",
+  //     name: "Michael",
+  //     surname: "Brown",
+  //     phone: "+1 (555) 234-5678",
+  //     startDate: "2023-09-05",
+  //     expirationDate: "2024-09-04",
+  //   },
+  // ];
 
-                    <div className="relative ml-3">
-                      <div>
-                        <button
-                          type="button"
-                          className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800"
-                          id="user-menu-button"
-                          aria-expanded="false"
-                          aria-haspopup="true"
-                        >
-                          <span className="absolute -inset-1.5"></span>
-                          <span className="sr-only">Open user menu</span>
-                          <Image
-                            width={20}
-                            height={20}
-                            className="size-8 rounded-full"
-                            src="/images/geekwitch.jpg"
-                            alt=""
-                          />
-                        </button>
-                      </div>
+  const [users,setUsers] = useState<Users>([])
 
-                      <div
-                        className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
-                        role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="user-menu-button"
-                        tabIndex={-1}
+  useEffect(()=>{
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get("/api/getUsers");
+        const result = response.data.users;
+        setUsers(result)
+        console.log("result: " + result)
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
+
+    fetchUsers();
+    
+  },[])
+
+  // Handler functions for buttons
+  const handleUpdate = (userId:string) => {
+    console.log(`Update user with ID: ${userId}`);
+    // Add your update logic here
+  };
+
+  const handleDelete = (userId:string) => {
+    console.log(`Delete user with ID: ${userId}`);
+    // Add your delete logic here
+  };
+
+  return (
+    <>
+      <div className="min-h-full">
+        <Navbar />
+        <header className="bg-white shadow-sm">
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+              Dashboard
+            </h1>
+          </div>
+        </header>
+        <main>
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            {/* Your content */}
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Surname
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Phone Number
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Start Date
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Expiration Date
+                    </th>
+                    <th scope="col" className="px-6 py-3"></th>
+                    <th scope="col" className="px-6 py-3"></th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {Array.isArray(users) && users.length !== 0 ? (
+                    users.map((user) => (
+                      <tr key={user.id}>
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                          {user.firstName}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {user.lastName}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {user.number}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {user.startDate?.toLocaleDateString()}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {user.endDate?.toLocaleDateString()}
+                        </td>
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                          <button
+                            onClick={() => handleUpdate(user.id)}
+                            className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-1 rounded-md"
+                          >
+                            Update
+                          </button>
+                        </td>
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                          <button
+                            onClick={() => handleDelete(user.id)}
+                            className="text-red-600 hover:text-red-900 bg-red-50 px-3 py-1 rounded-md"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="text-center py-4 text-gray-500"
                       >
-                        <a
-                          href="#"
-                          className="block px-4 py-2 text-sm text-gray-700"
-                          role="menuitem"
-                          tabIndex={-1}
-                          id="user-menu-item-0"
-                        >
-                          Your Profile
-                        </a>
-                        <a
-                          href="#"
-                          className="block px-4 py-2 text-sm text-gray-700"
-                          role="menuitem"
-                          tabIndex={-1}
-                          id="user-menu-item-1"
-                        >
-                          Settings
-                        </a>
-                        <a
-                          href="#"
-                          className="block px-4 py-2 text-sm text-gray-700"
-                          role="menuitem"
-                          tabIndex={-1}
-                          id="user-menu-item-2"
-                        >
-                          Sign out
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="-mr-2 flex md:hidden">
-                  <button
-                    type="button"
-                    className="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
-                    aria-controls="mobile-menu"
-                    aria-expanded="false"
-                  >
-                    <span className="absolute -inset-0.5"></span>
-                    <span className="sr-only">Open main menu</span>
-                    <svg
-                      className="block size-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                      />
-                    </svg>
-                    <svg
-                      className="hidden size-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18 18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+                        No Members Registered
+                      </td>
+                    </tr>
+                  )}
+                  {/* More rows here */}
+                </tbody>
+              </table>
             </div>
-
-            <div className="md:hidden" id="mobile-menu">
-              <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-                <a
-                  href="#"
-                  className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
-                  aria-current="page"
-                >
-                  Dashboard
-                </a>
-                <a
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Team
-                </a>
-                <a
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Projects
-                </a>
-                <a
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Calendar
-                </a>
-                <a
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Reports
-                </a>
-              </div>
-              <div className="border-t border-gray-700 pt-4 pb-3">
-                <div className="flex items-center px-5">
-                  <div className="shrink-0">
-                    <Image
-                      width={20}
-                      height={20}
-                      className="size-10 rounded-full"
-                      src="/images/geekwitch.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-base font-medium text-white">
-                      Tom Cook
-                    </div>
-                    <div className="text-sm font-medium text-gray-400">
-                      tom@example.com
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="relative ml-auto shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
-                  >
-                    <span className="absolute -inset-1.5"></span>
-                    <span className="sr-only">View notifications</span>
-                    <svg
-                      className="size-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className="mt-3 space-y-1 px-2">
-                  <a
-                    href="#"
-                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                  >
-                    Your Profile
-                  </a>
-                  <a
-                    href="#"
-                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                  >
-                    Settings
-                  </a>
-                  <a
-                    href="#"
-                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                  >
-                    Sign out
-                  </a>
-                </div>
-              </div>
-            </div>
-          </nav>
-
-          <header className="bg-white shadow-sm">
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-                Dashboard
-              </h1>
-            </div>
-          </header>
-          <main>
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-              {/* Your content */}
-            </div>
-          </main>
-        </div>
-      </>
-    );
+          </div>
+        </main>
+      </div>
+    </>
+  );
 }
  
 export default AdminDashboard;

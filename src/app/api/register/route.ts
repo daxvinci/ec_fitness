@@ -7,13 +7,13 @@ export async function POST(req: NextRequest) {
   await dbConnect();
 
   const body = await req.json();
-  const { firstName, lastName, date, email, number, password } = body;
+  const { firstName, lastName, email, number, password } = body;
   const saltRounds = 10;
  
 
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds)
-    const user = await User.create({ firstName, lastName, date, email, number, hashedPassword});
+    const user = await User.create({ firstName, lastName, email, number, hashedPassword});
     console.log(user);
     return NextResponse.json({ success: true, user }, { status: 200 });
   } catch (err) {

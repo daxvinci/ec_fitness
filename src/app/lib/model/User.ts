@@ -7,7 +7,15 @@ const UserSchema = new Schema<UserDetails>(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    date: { type: Date, default:Date.now, required: true },
+    startDate: { type: Date, default: Date.now, required: true },
+    endDate: {
+      type: Date,
+      default: function () {
+        const start = this.startDate || new Date();
+        return new Date(start.getTime() + 30 * 24 * 60 * 60 * 1000);
+      },
+      required: true,
+    },
     email: { type: String, required: true, unique: true },
     number: { type: String, required: true },
     password: { type: String }, // optional
