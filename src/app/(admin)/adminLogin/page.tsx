@@ -24,6 +24,7 @@ const AdminLogin = () => {
     try {
       const response = await axios.post("/api/adminLogin", form);
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
         router.push("/adminDashboard");
       }
       alert(response.data.message);

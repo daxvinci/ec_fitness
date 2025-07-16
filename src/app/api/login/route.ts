@@ -3,6 +3,7 @@ import dbConnect from "@/app/lib/dbConnect";
 import User from "@/app/lib/model/User";
 import { UserDetails } from "@/app/lib/types";
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
 export async function POST(req: NextRequest) {
   await dbConnect();
@@ -22,9 +23,13 @@ export async function POST(req: NextRequest) {
         { status: 200 }
       );
     }
-
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, firstName:user.firstName },
+      process.env.JWT_SECRET!,              
+      { expiresIn: "1d" }                    
+    );
     return NextResponse.json(
-      { message: "Login successful", success: true, user },
+      { message: "Login successful", success: true, token, user },
       { status: 200 }
     );
   } catch (err) {

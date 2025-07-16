@@ -7,14 +7,17 @@ export type UserDetails = {
   email: string;
   number: string;
   password: string;
+  admin:boolean;
 };
 
 export type Users = UserDetails[]
 
 export type AdminDetails = {
     id:string;
-    name:string;
+    firstName: string;
+    lastName: string;
     email:string;
     password:string;
     date:Date;
+    admin:boolean;
 }

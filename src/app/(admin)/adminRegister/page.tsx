@@ -32,6 +32,7 @@ const AdminRegister = () => {
      try {
        const response = await axios.post("/api/adminRegister", form);
        if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
          router.push("/adminDashboard");
        } else {
          alert("Registration failed!");

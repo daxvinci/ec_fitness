@@ -35,6 +35,7 @@ const UserRegister = () => {
     try {
       const response = await axios.post("/api/register", form);
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
         router.push("/dashboard");
       } else {
         alert("Registration failed!");

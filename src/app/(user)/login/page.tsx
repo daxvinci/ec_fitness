@@ -22,6 +22,7 @@ const UserLogin = () => {
     try {
       const response = await axios.post("/api/login", form);
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
         router.push("/dashboard");
       }
       alert(response.data.message);

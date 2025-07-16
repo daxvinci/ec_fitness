@@ -8,10 +8,12 @@ import { AdminDetails } from "../types";
 
 const AdminSchema = new Schema<AdminDetails>(
   {
-    name: { type: String, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: { type: String, required: true, unique:true },
     password: { type: String, required: true },
-    date:{type:Date, default:Date.now}
+    date:{type:Date, default:Date.now},
+    admin:{type:Boolean, default:true}
   },
   { timestamps: true }
 );

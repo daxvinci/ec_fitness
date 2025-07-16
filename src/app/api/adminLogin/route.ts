@@ -3,6 +3,7 @@ import dbConnect from "@/app/lib/dbConnect";
 import Admin from "@/app/lib/model/Admin";
 import bcrypt from "bcrypt"
 import { AdminDetails } from "@/app/lib/types";
+import jwt from "jsonwebtoken"
 
 export async function POST(req: NextRequest) {
   await dbConnect();
@@ -12,11 +13,16 @@ export async function POST(req: NextRequest) {
 
   try{
 
-    const user = await Admin.findOne<AdminDetails>({ email});
-    if(!user){
+    const admin = await Admin.findOne<AdminDetails>({ email});
+    if(!admin){
       return NextResponse.json({ message: "User not found" }, { status: 200 });
     }
-    const correctPassword = await bcrypt.compare(password, user.password);
+    const token = jwt.sign(
+      { userId: admin.id, email: admin.email, firstName:admin.firstName },
+      process.env.JWT_SECRET!,              
+      { expiresIn: "1d" }                    
+    );
+    const correctPassword = await bcrypt.compare(password, admin.password);
     if (!correctPassword) {
       return NextResponse.json(
         { message: "Invalid password" },
@@ -25,7 +31,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { message: "Login successful", success: true, user },
+      { message: "Login successful", success: true, token, user:admin },
       { status: 200 }
     );
 

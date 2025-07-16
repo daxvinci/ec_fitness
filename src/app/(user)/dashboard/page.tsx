@@ -1,20 +1,36 @@
 "use client";
 
-import { Users } from "@/app/lib/types";
+import Spinner from "@/app/components/Spinner";
+import { UserDetails} from "@/app/lib/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
 
-    const [users,setUsers] = useState<Users>([])
+    const [user,setUser] = useState<UserDetails>()
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
 
     useEffect(()=>{
       const fetchUsers = async () => {
         try {
-          const response = await axios.get("/api/getUsers");
-          const result = response.data.users;
-          setUsers(result)
-          console.log("result: " + result)
+          const token = localStorage.getItem("token");
+          if (!token) {
+            setUser(undefined);
+            setLoading(false);
+            setError("Unauthorized: No token found.");
+            return;
+          }
+          
+          const response = await axios.get(`/api/user`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const result = response.data.user;
+          setUser(result);
+          setLoading(false)
         } catch (err) {
           console.error("Error fetching users:", err);
         }
@@ -24,12 +40,49 @@ const Dashboard = () => {
       
     },[])
 
+    if(loading){
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+          <Spinner />
+          <h1 className="text-2xl text-gray-700 font-bold mt-4">Loading...</h1>
+        </div>
+    );
+    }
+
+    if (error) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+          <h1 className="text-3xl text-red-600 font-bold mb-4">Unauthorized</h1>
+          <p className="text-lg text-gray-700">{error}</p>
+        </div>
+      );
+    }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
-      <h1 className="text-3xl font-bold mb-4">Welcome!</h1>
-      <p className="text-lg text-gray-700">
-        You signed in successfully on {today}.
-      </p>
+      {user ? (
+        <>
+          <h1 className="text-3xl text-gray-700 font-bold mb-4">
+            Welcome! {user?.firstName}
+          </h1>
+          <p className="text-lg text-gray-700">
+            Your Membership expires on{" "}
+            {user?.endDate
+              ? new Date(user.endDate).toLocaleDateString()
+              : "N/A"}
+            .
+          </p>
+        </>
+      ) : (
+        <>
+          <h1 className="text-3xl text-gray-700 font-bold mb-4">
+            Network Error
+          </h1>
+          <p className="text-lg text-gray-700">
+            Please re-connect to the internet.
+          </p>
+        </>
+      )}
     </div>
   );
 };
