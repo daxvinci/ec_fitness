@@ -8,13 +8,13 @@ export async function POST(req: NextRequest) {
   await dbConnect();
 
   const body = await req.json();
-  const { name, email, password } = body;
+  const { name, email, firstName,lastName, password } = body;
   const saltRounds = 10;
 
   try{
 
           const hashedPassword = await bcrypt.hash(password, saltRounds)
-          const admin = await Admin.create({ name, email, password:hashedPassword });
+          const admin = await Admin.create({ name, email, firstName,lastName, password:hashedPassword });
           if(!admin){
             return NextResponse.json({ message: "User not found" }, { status: 200 });
           }

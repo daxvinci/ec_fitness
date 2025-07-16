@@ -58,7 +58,7 @@ const AdminDashboard = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        const result = response.data.users;
+        const result = response.data.admin;
         setAdmin(result)
       } catch (err) {
         console.error("Error fetching users:", err);

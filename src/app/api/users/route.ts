@@ -26,6 +26,6 @@ export async function GET(request: NextRequest) {
     );
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ message: "error check logs" });
+    return NextResponse.json({ message: "error check logs" },{ status: 500 });
   }
 }

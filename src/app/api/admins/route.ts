@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/app/lib/dbConnect";
-import User from "@/app/lib/model/User";
-import { UserDetails } from "@/app/lib/types";
 import jwt from "jsonwebtoken";
 
 
@@ -16,16 +14,25 @@ export async function GET(request: NextRequest) {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
-    const admin = await User.find<UserDetails>();
-    if (!admin) {
-      return NextResponse.json({ message: "Users not found" }, { status: 200 });
+    // Type guard to ensure decoded is an object and has the expected fields
+    if (
+      typeof decoded === "object" &&
+      decoded !== null &&
+      "firstName" in decoded &&
+      "email" in decoded
+    ) {
+      // Now you can safely return decoded
+      return NextResponse.json(
+        { message: "Admin info", success: true, admin: decoded },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        { message: "Invalid token payload" },
+        { status: 401 }
+      );
     }
-    return NextResponse.json(
-      { message: "Users retrieved", success: true, decoded, users:admin },
-      { status: 200 }
-    );
   } catch (err) {
-    console.log(err);
-    return NextResponse.json({ message: "error check logs" });
+    return NextResponse.json({ message: "Unauthorized",error:err }, { status: 500 });
   }
 }
