@@ -9,7 +9,8 @@ import { useState } from "react";
 const AdminRegister = () => {
    const router = useRouter()
    const [form, setForm] = useState({
-     name: "",
+     firstName: "",
+     lastName: "",
      email: "",
      password: "",
      confirmPassword: ""
@@ -62,18 +63,39 @@ const AdminRegister = () => {
               <form className="space-y-6" onSubmit={handleSubmit} method="POST">
                 <div>
                   <label
-                    htmlFor="name"
+                    htmlFor="firstName"
                     className="block text-sm/6 font-medium text-black"
                   >
-                    Name
+                    firstName
                   </label>
                   <div className="mt-2">
                     <input
                       type="text"
-                      name="name"
-                      id="name"
+                      name="firstName"
+                      id="firstName"
                       autoComplete="name"
-                      value={form.name}
+                      value={form.firstName}
+                      onChange={handleChange}
+                      required
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm/6 font-medium text-black"
+                  >
+                    lastName
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      name="lastName"
+                      id="lastName"
+                      autoComplete="name"
+                      value={form.lastName}
                       onChange={handleChange}
                       required
                       className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
