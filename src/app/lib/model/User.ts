@@ -19,7 +19,8 @@ const UserSchema = new Schema<UserDetails>(
     email: { type: String, required: true, unique: true },
     number: { type: String, required: true },
     password: { type: String }, // optional
-    admin:{type:Boolean, default:false}
+    admin:{type:Boolean, default:false},
+    role:{type:String,default:"admin"}
   },
   { timestamps: true }
 );

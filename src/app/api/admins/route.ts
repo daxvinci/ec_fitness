@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
       decoded !== null &&
       "firstName" in decoded &&
       "email" in decoded &&
-      "admin" in decoded &&
-      decoded.admin === true
+      "role" in decoded &&
+      decoded.role === "admin"
     ) {
       // Now you can safely return decoded
       return NextResponse.json(

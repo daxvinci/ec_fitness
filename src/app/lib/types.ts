@@ -8,6 +8,7 @@ export type UserDetails = {
   number: string;
   password: string;
   admin:boolean;
+  role:string;
 };
 
 export type Users = UserDetails[]
@@ -20,4 +21,5 @@ export type AdminDetails = {
     password:string;
     date:Date;
     admin:boolean;
+    role:string;
 }
