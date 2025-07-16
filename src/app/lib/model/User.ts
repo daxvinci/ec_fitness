@@ -20,7 +20,7 @@ const UserSchema = new Schema<UserDetails>(
     number: { type: String, required: true },
     password: { type: String }, // optional
     admin:{type:Boolean, default:false},
-    role:{type:String,default:"admin"}
+    role:{type:String,default:"user"}
   },
   { timestamps: true }
 );

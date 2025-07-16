@@ -14,7 +14,7 @@ const AdminSchema = new Schema<AdminDetails>(
     password: { type: String, required: true },
     date:{type:Date, default:Date.now},
     admin:{type:Boolean, default:true},
-    role:{type:String,default:"user"}
+    role:{type:String,default:"admin"}
 
   },
   { timestamps: true }
