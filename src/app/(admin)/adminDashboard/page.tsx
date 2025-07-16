@@ -13,60 +13,43 @@ const AdminDashboard = () => {
   const [loading,setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(()=>{
-    const fetchUsers = async () => {
+  useEffect(() => {
+    const fetchAdminAndUsers = async () => {
       try {
         const token = localStorage.getItem("token");
-          if (!token) {
-            setUsers([]);
-            setLoading(false)
-            setError("Unauthorized: No token found.");
-            return;
-          }
-
-        const response = await axios.get("/api/users",{
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        if (!token) {
+          setError("Unauthorized: No token found.");
+          setLoading(false);
+          return;
+        }
+  
+        // Fetch admin first
+        const adminResponse = await axios.get("/api/admins", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setLoading(false)
-        const result = response.data.users;
-        setUsers(result)
-      } catch (err) {
-        setLoading(false)
-        console.error("Error fetching users:", err);
+        const adminResult = adminResponse.data.admin;
+        setAdmin(adminResult);
+  
+        // If admin fetch is successful, fetch users
+        const usersResponse = await axios.get("/api/users", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const usersResult = usersResponse.data.users;
+        setUsers(usersResult);
+  
+      }catch (err: unknown) {
+        if (axios.isAxiosError(err) && err.response?.data?.message) {
+          setError(err.response.data.message);
+        } else {
+          setError("Unauthorized: Admin access required.");
+        }
+      } finally {
+        setLoading(false);
       }
     };
-
-    fetchUsers();
-    
-  },[])
-
-  useEffect(()=>{
-    const fetchAdmin = async () => {
-      try {
-        const token = localStorage.getItem("token");
-          if (!token) {
-            setUsers([]);
-            setLoading(false);
-            setError("Unauthorized: No token found.");
-            return;
-          }
-
-        const response = await axios.get("/api/admins",{
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const result = response.data.admin;
-        setAdmin(result)
-      } catch (err) {
-        console.error("Error fetching users:", err);
-      }
-    };
-
-    fetchAdmin();
-  },[])
+  
+    fetchAdminAndUsers();
+  }, []);
 
   // Handler functions for buttons
   const handleUpdate = async (userId:string) => {

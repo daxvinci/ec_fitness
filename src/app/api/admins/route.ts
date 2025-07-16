@@ -19,7 +19,9 @@ export async function GET(request: NextRequest) {
       typeof decoded === "object" &&
       decoded !== null &&
       "firstName" in decoded &&
-      "email" in decoded
+      "email" in decoded &&
+      "admin" in decoded &&
+      decoded.admin === true
     ) {
       // Now you can safely return decoded
       return NextResponse.json(
@@ -28,8 +30,8 @@ export async function GET(request: NextRequest) {
       );
     } else {
       return NextResponse.json(
-        { message: "Invalid token payload" },
-        { status: 401 }
+        { message: "Forbidden: Admins only" },
+        { status: 403 }
       );
     }
   } catch (err) {

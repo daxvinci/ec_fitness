@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "User not found" }, { status: 200 });
           }
           const token = jwt.sign(
-            { userId: admin.id, email: admin.email, firstName:admin.firstName },
+            { userId: admin.id, email: admin.email, firstName:admin.firstName,admin:true },
             process.env.JWT_SECRET!,              
             { expiresIn: "1d" }                    
           );
