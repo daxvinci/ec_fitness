@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 
 const UserLogin = () => {
   const router = useRouter();
@@ -110,6 +111,10 @@ const UserLogin = () => {
               </button>
             </div>
           </form>
+          <div className="mt-6 text-center">
+            Don&apos;t have an account?{' '}
+            <Link href="/register" className="underline text-indigo-600 hover:text-indigo-800">Register</Link>
+          </div>
         </div>
       </div>
     </>

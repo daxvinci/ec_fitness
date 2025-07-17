@@ -194,13 +194,10 @@ const UserRegister = () => {
                     {isLoading ? "Registering...." : "Register"}
                   </button>
                 </div>
-                Already Registered?
-                <Link
-                  href="/login"
-                  className="underline ml-4 decoration-indigo-600 text-white/80"
-                >
-                  Log in
-                </Link>
+                <div className="mt-6 text-center">
+                  Already have an account?{' '}
+                  <Link href="/login" className="underline text-indigo-600 hover:text-indigo-800">Log in</Link>
+                </div>
               </form>
             </div>
           </div>

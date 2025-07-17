@@ -1,77 +1,43 @@
 import Link from "next/link";
-
+import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight ">
-          Sign in to your account
-        </h2>
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
+      {/* Background image with Next.js Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/gym_bg.jpg"
+          alt="Gym background"
+          fill
+          style={{ objectFit: "cover" }}
+          priority
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-70" />
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm/6 font-medium text-white"
-            >
-              Email address
-            </label>
-            <div className="mt-2">
-              <input
-                type="email"
-                name="email"
-                id="email"
-                autoComplete="email"
-                required
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-              />
-            </div>
-          </div>
+      {/* Admin link top right */}
+      <div className="absolute top-6 right-8 z-10">
+        <Link href="/adminLogin" className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold shadow hover:bg-indigo-700 transition">
+          Admin
+        </Link>
+      </div>
 
-          <div>
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="block text-sm/6 font-medium text-white"
-              >
-                Password
-              </label>
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                >
-                  Forgot password?
-                </a>
-              </div>
-            </div>
-            <div className="mt-2">
-              <input
-                type="password"
-                name="password"
-                id="password"
-                autoComplete="current-password"
-                required
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-              />
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Sign in
+      {/* Centered content */}
+      <div className="relative z-10 flex flex-col items-center justify-center">
+        <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-8 drop-shadow-lg tracking-wide text-center">
+          ec-fitness
+        </h1>
+        <div className="flex flex-col gap-4 w-48">
+          <Link href="/register">
+            <button className="w-full hover:cursor-pointer py-3 rounded-lg bg-green-500 text-white font-bold text-lg shadow hover:bg-green-600 transition">
+              Register
             </button>
-          </div>
-        </form>
-        <div className="admin mt-6">
-          <Link href="/adminRegister" className="px-2 py-1 bg-green-400 rounded-3xl">
-            click if Admin
+          </Link>
+          <Link href="/login">
+            <button className="w-full hover:cursor-pointer py-3 rounded-lg bg-indigo-600 text-white font-bold text-lg shadow hover:bg-indigo-700 transition">
+              Login
+            </button>
           </Link>
         </div>
       </div>

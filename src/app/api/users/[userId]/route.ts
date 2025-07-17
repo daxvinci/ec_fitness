@@ -3,7 +3,7 @@ import dbConnect from "@/app/lib/dbConnect";
 import User from "@/app/lib/model/User";
 
 
-export async function DELETE(request: NextRequest,{params}:{params:Promise<{userId:string}>}) {
+export async function DELETE(req: NextRequest,{params}:{params:Promise<{userId:string}>}) {
   await dbConnect();
 
   const id = await params
