@@ -32,14 +32,14 @@ export async function PATCH(req: NextRequest,{ params }: { params: Promise<{ use
   try {
     const users = await User.findByIdAndUpdate(id.userId, {startDate,endDate},{new:true});
     if (!users) {
-      return NextResponse.json({ message: "Users not found" }, { status: 200 });
+      return NextResponse.json({ message: "User not found" }, { status: 200 });
     }
     return NextResponse.json(
-      { message: "Users retrieved", success: true, users },
+      { message: "User Updated", success: true, users },
       { status: 200 }
     );
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ message: "error check logs" });
+    return NextResponse.json({ message: "error check logs" },{status:500});
   }
 }

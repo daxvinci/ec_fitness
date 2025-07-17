@@ -240,8 +240,16 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        startDate={selectedUser?.startDate ? selectedUser.startDate.toISOString() : ""}
-        endDate={selectedUser?.endDate ? selectedUser.endDate.toISOString() : ""}
+        startDate={selectedUser?.startDate
+          ? typeof selectedUser.startDate === "string"
+            ? selectedUser.startDate.slice(0, 10)
+            : selectedUser.startDate.toISOString().slice(0, 10)
+          : ""}
+        endDate={selectedUser?.endDate
+          ? typeof selectedUser.endDate === "string"
+            ? selectedUser.endDate.slice(0, 10)
+            : selectedUser.endDate.toISOString().slice(0, 10)
+          : ""}
         onSet={handleSetDates}
       />
     </>
