@@ -38,7 +38,7 @@ const UserRegister = () => {
         localStorage.setItem("token", response.data.token);
         router.push("/dashboard");
       } else {
-        alert("Registration failed!");
+        alert(response.data.message || "Registration failed!");
       }
       setIsLoading(false);
       console.log("Server response:", response.data);
@@ -47,7 +47,7 @@ const UserRegister = () => {
       if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
         alert("Request timed out. Please try again.");
       }
-      console.error("Error registering admin:", error);
+      console.error("Error registering user: ", error);
     }
   };
 

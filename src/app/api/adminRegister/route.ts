@@ -13,6 +13,14 @@ export async function POST(req: NextRequest) {
 
   try{
 
+    const existingUser = await Admin.findOne({ email });
+    if (existingUser) {
+      return NextResponse.json(
+        { success: false, message: "User already exists with this email." },
+        { status: 409 }
+      );
+    }
+
           const hashedPassword = await bcrypt.hash(password, saltRounds)
           const admin = await Admin.create({ name, email, firstName,lastName, password:hashedPassword });
           if(!admin){
