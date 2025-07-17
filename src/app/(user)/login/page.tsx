@@ -26,9 +26,9 @@ const UserLogin = () => {
         localStorage.setItem("token", response.data.token);
         router.push("/dashboard");
       }
-      // alert(response.data.message); MAKE IT A TOAST
+      alert(response.data.message); //MAKE IT A TOAST
       setIsLoading(false);
-      console.log("Server response:", response.data);
+      // console.log("Server response:", response.data.message);
     } catch (error) {
       setIsLoading(false);
       if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
