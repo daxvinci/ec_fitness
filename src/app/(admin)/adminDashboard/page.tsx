@@ -1,5 +1,6 @@
 "use client"
 
+import Modal from "@/app/components/Modal";
 import Navbar from "@/app/components/Navbar";
 import Spinner from "@/app/components/Spinner";
 import { AdminDetails, UserDetails, Users } from "@/app/lib/types";
@@ -12,6 +13,27 @@ const AdminDashboard = () => {
   const [admin,setAdmin] = useState<AdminDetails>()
   const [loading,setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
+
+const handleOpenModal = (user: UserDetails) => {
+  setSelectedUser(user);
+  setModalOpen(true);
+};
+
+const handleSetDates = async (startDateISO: string, endDateISO: string) => {
+  if (!selectedUser) return;
+  await axios.patch(`/api/users/${selectedUser.id}`, { startDate: startDateISO, endDate: endDateISO });
+  setUsers(users =>
+    users.map(u =>
+      u.id === selectedUser.id
+        ? { ...u, startDate: new Date(startDateISO), endDate: new Date(endDateISO) }
+        : u
+    )
+  );
+  setModalOpen(false);
+  setSelectedUser(null);
+};
 
   useEffect(() => {
     const fetchAdminAndUsers = async () => {
@@ -52,25 +74,25 @@ const AdminDashboard = () => {
   }, []);
 
   // Handler functions for buttons
-  const handleUpdate = async (userId:string) => {
-    const newUser = users.map((user:UserDetails) => {
-      if(user.id === userId){
-        return {
-          ...user,
-          startDate: new Date(),
-          endDate: new Date()
-        }
-      }
-      return user;
-    } )
-    setUsers(newUser)
-    const result = await axios.patch(`/api/users/${userId}`,{
-      startDate: new Date().toISOString(), 
-      endDate: new Date().toISOString()
-    })
+  // const handleUpdate = async (userId:string) => {
+  //   const newUser = users.map((user:UserDetails) => {
+  //     if(user.id === userId){
+  //       return {
+  //         ...user,
+  //         startDate: new Date(),
+  //         endDate: new Date()
+  //       }
+  //     }
+  //     return user;
+  //   } )
+  //   setUsers(newUser)
+  //   const result = await axios.patch(`/api/users/${userId}`,{
+  //     startDate: new Date().toISOString(), 
+  //     endDate: new Date().toISOString()
+  //   })
 
-    console.log(result.data.users) //add toast notification
-  };
+  //   console.log(result.data.users) //add toast notification
+  // };
 
   const handleDelete = async (userId:string) => {
 
@@ -177,7 +199,7 @@ const AdminDashboard = () => {
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <button
-                            onClick={() => handleUpdate(user.id)}
+                            onClick={() => handleOpenModal(user)}
                             className="text-indigo-600 hover:cursor-pointer hover:text-indigo-900 bg-indigo-50 px-3 py-1 rounded-md"
                           >
                             Update
@@ -210,6 +232,13 @@ const AdminDashboard = () => {
           </div>
         </main>
       </div>
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        startDate={selectedUser?.startDate ? selectedUser.startDate.toISOString() : ""}
+        endDate={selectedUser?.endDate ? selectedUser.endDate.toISOString() : ""}
+        onSet={handleSetDates}
+      />
     </>
   );
 }

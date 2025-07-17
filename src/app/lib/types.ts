@@ -23,3 +23,11 @@ export type AdminDetails = {
     admin:boolean;
     role:string;
 }
+
+export type ModalProps = {
+  open: boolean;
+  onClose: () => void;
+  startDate: string; // ISO string
+  endDate: string;   // ISO string
+  onSet: (startDate: string, endDate: string) => void;
+};

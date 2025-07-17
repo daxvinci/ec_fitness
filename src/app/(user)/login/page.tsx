@@ -25,7 +25,7 @@ const UserLogin = () => {
         localStorage.setItem("token", response.data.token);
         router.push("/dashboard");
       }
-      alert(response.data.message);
+      // alert(response.data.message); MAKE IT A TOAST
       setIsLoading(false);
       console.log("Server response:", response.data);
     } catch (error) {

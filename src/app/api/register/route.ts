@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds)
-    const user = await User.create({ firstName, lastName, email, number, hashedPassword});
+    const user = await User.create({ firstName, lastName, email, number, password:hashedPassword});
 
     const token = jwt.sign(
       { userId: user.id, email: user.email, firstName:user.firstName },
