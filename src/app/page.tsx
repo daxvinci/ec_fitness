@@ -13,7 +13,7 @@ export default function Home() {
           style={{ objectFit: "cover" }}
           priority
         />
-        <div className="absolute inset-0 bg-black bg-opacity-70" />
+        <div className="absolute inset-0 bg-black/30" />
       </div>
 
       {/* Admin link top right */}

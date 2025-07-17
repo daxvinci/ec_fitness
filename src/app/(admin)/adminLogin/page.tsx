@@ -22,7 +22,7 @@ const AdminLogin = () => {
     setIsLoading(true);
     e.preventDefault();
     try {
-      const response = await axios.post("/api/adminLogin", form);
+      const response = await axios.post("/api/adminLogin", form,{timeout:20000});
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
         router.push("/adminDashboard");
@@ -31,7 +31,10 @@ const AdminLogin = () => {
       setIsLoading(false);
       console.log("Server response:", response.data);
     } catch (error) {
-      setIsLoading(false);
+      setIsLoading(false); 
+      if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
+        alert("Request timed out. Please try again.");
+      }
       console.error("Error Logging admin:", error);
     }
   };

@@ -31,7 +31,7 @@ const AdminRegister = () => {
        return;
      }
      try {
-       const response = await axios.post("/api/adminRegister", form);
+       const response = await axios.post("/api/adminRegister", form,{timeout:20000});
        if (response.data.success) {
         localStorage.setItem("token", response.data.token);
          router.push("/adminDashboard");
@@ -42,6 +42,9 @@ const AdminRegister = () => {
        console.log("Server response:", response.data);
      } catch (error) {
        setIsLoading(false)
+       if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
+         alert("Request timed out. Please try again.");
+       }
        console.error("Error registering admin:", error);
      }
    };
