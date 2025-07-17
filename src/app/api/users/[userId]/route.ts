@@ -3,12 +3,12 @@ import dbConnect from "@/app/lib/dbConnect";
 import User from "@/app/lib/model/User";
 
 
-export async function DELETE(request: NextRequest,{params}:{params:{userId:string}}) {
+export async function DELETE(request: NextRequest,{params}:{params:Promise<{userId:string}>}) {
   await dbConnect();
 
-  const id = params.userId
+  const id = await params
   try {
-    const users = await User.findByIdAndDelete(id);
+    const users = await User.findByIdAndDelete(id.userId);
     if (!users) {
       return NextResponse.json({ message: "Users not found" }, { status: 200 });
     }
@@ -23,14 +23,14 @@ export async function DELETE(request: NextRequest,{params}:{params:{userId:strin
   }
 }
 
-export async function PATCH(req: NextRequest,{ params }: { params: { userId: string } }) {
+export async function PATCH(req: NextRequest,{ params }: { params: Promise<{ userId: string }> }) {
   await dbConnect();
 
-  const id = params.userId;
+  const id = await params;
   const {startDate,endDate} = await req.json();
 
   try {
-    const users = await User.findByIdAndUpdate(id, {startDate,endDate},{new:true});
+    const users = await User.findByIdAndUpdate(id.userId, {startDate,endDate},{new:true});
     if (!users) {
       return NextResponse.json({ message: "Users not found" }, { status: 200 });
     }
