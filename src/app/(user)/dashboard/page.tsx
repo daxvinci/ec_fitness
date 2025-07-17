@@ -27,12 +27,16 @@ const Dashboard = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            timeout:20000
           });
           const result = response.data.user;
           setUser(result);
           setLoading(false)
-        } catch (err) {
-          console.error("Error fetching users:", err);
+        } catch (error) {
+          if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
+            alert("Request timed out. Please try again.");
+          }
+          console.error("Error fetching users:", error);
         }
       };
   

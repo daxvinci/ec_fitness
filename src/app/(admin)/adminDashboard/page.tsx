@@ -48,6 +48,7 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
         // Fetch admin first
         const adminResponse = await axios.get("/api/admins", {
           headers: { Authorization: `Bearer ${token}` },
+          timeout:20000
         });
         const adminResult = adminResponse.data.admin;
         setAdmin(adminResult);
@@ -55,6 +56,7 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
         // If admin fetch is successful, fetch users
         const usersResponse = await axios.get("/api/users", {
           headers: { Authorization: `Bearer ${token}` },
+          timeout:20000
         });
         const usersResult = usersResponse.data.users;
         setUsers(usersResult);
