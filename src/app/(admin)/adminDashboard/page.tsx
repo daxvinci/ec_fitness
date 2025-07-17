@@ -133,6 +133,9 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
               Welcome {admin?.firstName}
             </h1>
+            {admin?.email && (
+              <p className="text-sm text-gray-500 mt-1">{admin.email}</p>
+            )}
           </div>
         </header>
         <main>
@@ -183,7 +186,7 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                           {user.firstName}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
                           {user.lastName}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
