@@ -17,6 +17,19 @@ const UserTable = ({ users, handleOpenModal, handleDelete }: UserTableProps) => 
         {name:"Expired",value:0}
     ]
 
+    const tableHeaders = [
+        { name: "Name" },
+        { name: "Surname" },
+        { name: "Phone Number" },
+        { name: "Email" },
+        // { name: "Amount" },
+        // { name: "Trainer" },
+        { name: "Start Date" },
+        { name: "Expiration Date" },
+        { name: "" }, // For Update button
+        { name: "" }, // For Delete button
+      ];
+
     const [currentFilter,setCurrentFilter] = useState("All Members")
     const handleFilter = (name:string) =>{
         console.log("clicked")
@@ -46,59 +59,39 @@ const UserTable = ({ users, handleOpenModal, handleDelete }: UserTableProps) => 
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                     <tr>
+                    {tableHeaders.map((header, idx) => (
                         <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            key={idx}
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
-                        Name
+                            {header.name}
                         </th>
-                        <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                        Surname
-                        </th>
-                        <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                        Phone Number
-                        </th>
-                        <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                        Start Date
-                        </th>
-                        <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                        Expiration Date
-                        </th>
-                        <th scope="col" className="px-6 py-3"></th>
-                        <th scope="col" className="px-6 py-3"></th>
+                        ))}
                     </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                     {Array.isArray(users) && users.length !== 0 ? (
                         users.map((user) => (
                         <tr key={user.id}>
-                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            <td className="whitespace-nowrap py-4 px-6 pr-3 text-sm font-medium text-gray-900 ">
                             {user.firstName}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                             {user.lastName}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                            {user.email}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {user.number}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {user?.startDate
                                 ? new Date(user.startDate).toLocaleDateString()
                                 : "N/A"}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {user?.endDate
                                 ? new Date(user.endDate).toLocaleDateString()
                                 : "N/A"}
