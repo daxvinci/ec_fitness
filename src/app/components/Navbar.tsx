@@ -18,13 +18,9 @@ const Navbar = () => {
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                <a
-                  href="#"
-                  className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
-                  aria-current="page"
-                >
-                  Dashboard
-                </a>
+                <h1 className="text-2xl font-bold text-gray-200">
+                  Gym Management Dashboard
+                </h1>
               </div>
             </div>
           </div>

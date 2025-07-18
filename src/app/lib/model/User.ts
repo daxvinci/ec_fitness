@@ -12,7 +12,7 @@ const UserSchema = new Schema<UserDetails>(
       type: Date,
       default: function () {
         const start = this.startDate || new Date();
-        return new Date(start.getTime() + 30 * 24 * 60 * 60 * 1000);
+        return new Date( (typeof start === "string" ? new Date(start) : start).getTime() + 30 * 24 * 60 * 60 * 1000);
       },
       required: true,
     },
@@ -20,7 +20,12 @@ const UserSchema = new Schema<UserDetails>(
     number: { type: String, required: true },
     password: { type: String }, // optional
     admin:{type:Boolean, default:false},
-    role:{type:String,default:"user"}
+    role:{type:String,default:"user"},
+    membership:{type:String},
+    amount:{type:Number},
+    trainer:{type:String,default:""},
+    status:{type:String,default:""},
+    expired:{type:Boolean}
   },
   { timestamps: true }
 );

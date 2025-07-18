@@ -9,6 +9,11 @@ export type UserDetails = {
   password: string;
   admin:boolean;
   role:string;
+  membership:string;
+  amount:number;
+  trainer:string;
+  status:string;
+  expired:boolean;
 };
 
 export type Users = UserDetails[]
