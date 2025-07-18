@@ -110,7 +110,7 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
 
   return (
     <>
-      <div className="min-h-full bg-gray-200">
+      <div className="min-h-screen bg-gray-200">
         <Navbar />
 
         <Header admin={admin}/>
@@ -128,7 +128,7 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
           </div>
 
         </main>
-        
+
       </div>
 
       <Modal
