@@ -13,6 +13,8 @@ export type UserDetails = {
   amount:number;
   trainer:string;
   status:string;
+  active:boolean;
+  expiringSoon:boolean;
   expired:boolean;
 };
 

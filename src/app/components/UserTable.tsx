@@ -42,19 +42,21 @@ const UserTable = ({ users, handleOpenModal, handleDelete }: UserTableProps) => 
             <h2 className="text-lg font-semibold text-gray-800 mb-4">Members</h2>
 
             {/* Filters */}
-            <div className="flex flex-wrap gap-2 rounded-lg bg-gray-200 py-1 px-2 mb-4">
-            {filters.map((label, i) => (
-                <button 
-                key={i} 
-                onClick={()=>handleFilter(label.name)}
-                className={`px-3 py-1 hover:cursor-pointer text-gray-400  rounded ${currentFilter === label.name ? "bg-white text-gray-900 font-medium" : "hover:bg-gray-100"}`}>
-                {label.name}({label.value})
-                </button>
-            ))}
+            <div className="filter-container inline-block">
+                <div className="flex flex-wrap gap-2 rounded-lg bg-gray-200 py-1 px-2 mb-4">
+                {filters.map((label, i) => (
+                    <button 
+                    key={i} 
+                    onClick={()=>handleFilter(label.name)}
+                    className={`px-3 py-1 hover:cursor-pointer text-gray-400  rounded ${currentFilter === label.name ? "bg-white text-gray-900 font-medium" : "hover:bg-gray-100"}`}>
+                    {label.name}({label.value})
+                    </button>
+                ))}
+                </div>
             </div>
 
             <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                {/* Your content */}
+                
                 <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">

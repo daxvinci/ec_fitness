@@ -25,6 +25,8 @@ const UserSchema = new Schema<UserDetails>(
     amount:{type:Number},
     trainer:{type:String,default:""},
     status:{type:String,default:""},
+    active:{type:Boolean},
+    expiringSoon:{type:Boolean},
     expired:{type:Boolean}
   },
   { timestamps: true }
