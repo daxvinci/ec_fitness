@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   await dbConnect();
 
   const body = await req.json();
-  const { firstName, lastName, email, number, password } = body;
+  const { name, email, number, password } = body;
   const saltRounds = 10;
  
 
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     }
     
     const hashedPassword = await bcrypt.hash(password, saltRounds)
-    const user = await User.create({ firstName, lastName, email, number, password:hashedPassword});
+    const user = await User.create({ name, email, number, password:hashedPassword});
 
     const token = jwt.sign(
       { userId: user.id, email: user.email, firstName:user.firstName },

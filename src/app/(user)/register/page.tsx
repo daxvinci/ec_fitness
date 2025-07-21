@@ -1,22 +1,63 @@
 "use client"
 
+import Spinner from "@/app/components/Spinner";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+
+type MyJwtPayload = {
+  userId: string;
+  email: string;
+  firstName: string;
+  role: string;
+};
 
 
 const UserRegister = () => {
 
+  const [loading,setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+
+  useEffect(() => {
+    const fetchAdminAndUsers = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Unauthorized: No token found.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Fetch admin first
+        const decoded = jwtDecode<MyJwtPayload>(token);
+        // check for admin role
+        if (!decoded || decoded.role !== "admin") {
+          router.replace("/adminLogin"); // Not admin, redirect
+        }
+      } catch (err) {
+        router.replace("/adminLogin"); // Invalid token, redirect
+        console.log(err)
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchAdminAndUsers();
+  }, [router]);
+
+
   const [form, setForm] = useState({
-    firstName: "",
-    lastName:"",
+    name: "",
     email: "",
     number:"",
     password: "",
     confirmPassword: "",
   });
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,8 +76,11 @@ const UserRegister = () => {
     try {
       const response = await axios.post("/api/register", form,{ timeout: 20000 });
       if (response.data.success) {
-        localStorage.setItem("token", response.data.token);
-        router.push("/dashboard");
+        // localStorage.setItem("token", response.data.token); not storing since no user dashboard
+        setTimeout(()=>{
+          router.push("/adminDashboard");
+        },5000)
+        alert('Registeration Successfull') //TO BE TOASTED
       } else {
         alert(response.data.message || "Registration failed!");
       }
@@ -50,6 +94,24 @@ const UserRegister = () => {
       console.error("Error registering user: ", error);
     }
   };
+
+  if(loading){
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+        <Spinner />
+        <h1 className="text-2xl text-gray-700 font-bold mt-4">Loading...</h1>
+      </div>
+  );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+        <h1 className="text-3xl text-red-600 font-bold mb-4">Unauthorized</h1>
+        <p className="text-lg text-gray-700">{error}</p>
+      </div>
+    );
+  }
 
     return (
       <>
@@ -65,38 +127,18 @@ const UserRegister = () => {
               <form className="space-y-6" onSubmit={handleSubmit} method="POST">
                 <div>
                   <label
-                    htmlFor="firstName"
+                    htmlFor="name"
                     className="block text-sm/6 font-medium text-gray-900"
                   >
-                    FirstName
+                    Name
                   </label>
                   <div className="mt-2">
                     <input
                       type="text"
-                      name="firstName"
-                      id="firstName"
+                      name="name"
+                      id="name"
                       autoComplete="name"
-                      value={form.firstName}
-                      onChange={handleChange}
-                      required
-                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="lastName"
-                    className="block text-sm/6 font-medium text-gray-900"
-                  >
-                    Last name
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      autoComplete="name"
-                      value={form.lastName}
+                      value={form.name}
                       onChange={handleChange}
                       required
                       className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"

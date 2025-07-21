@@ -5,8 +5,7 @@ import { UserDetails } from "../types";
 
 const UserSchema = new Schema<UserDetails>(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    name: { type: String, required: true },
     startDate: { type: Date, default: Date.now, required: true },
     endDate: {
       type: Date,
@@ -19,12 +18,17 @@ const UserSchema = new Schema<UserDetails>(
     email: { type: String, required: true, unique: true },
     number: { type: String, required: true },
     password: { type: String }, // optional
+    subscription:{type:String},
     admin:{type:Boolean, default:false},
     role:{type:String,default:"user"},
-    membership:{type:String},
     amount:{type:Number},
     trainer:{type:String,default:""},
-    status:{type:String,default:""},
+    daysLeft:{type: Number},
+    status: {
+      type: String,
+      enum: ["active", "paused", "expired","expiring"],
+      default: "active"
+    },
     active:{type:Boolean},
     expiringSoon:{type:Boolean},
     expired:{type:Boolean}

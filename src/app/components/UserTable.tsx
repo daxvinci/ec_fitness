@@ -7,30 +7,37 @@ type UserTableProps = {
     users: UserDetails[];
     handleOpenModal: (user: UserDetails) => void;
     handleDelete: (userId: string) => void;
+    handlePause: (userId: UserDetails) => void;
   };
 
-const UserTable = ({ users, handleOpenModal, handleDelete }: UserTableProps) => {
+const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTableProps) => {
+
+    const [currentFilter,setCurrentFilter] = useState("All Members")
+
     const filters = [
         {name:"All Members",value:0},
         {name:"Active",value:0},
+        {name:"Inactive",value:0},
         {name:"Expiring Soon",value:0},
         {name:"Expired",value:0}
     ]
 
     const tableHeaders = [
         { name: "Name" },
-        { name: "Surname" },
         { name: "Phone Number" },
         { name: "Email" },
-        // { name: "Amount" },
-        // { name: "Trainer" },
+        { name: "Sub" },
+        // { name: "Amount" }, 
+        { name: "Trainer" },
         { name: "Start Date" },
         { name: "Expiration Date" },
+        { name: "Days Left" },
+        { name: "Status" },
         { name: "" }, // For Update button
         { name: "" }, // For Delete button
       ];
 
-    const [currentFilter,setCurrentFilter] = useState("All Members")
+
     const handleFilter = (name:string) =>{
         console.log("clicked")
         setCurrentFilter(name)
@@ -76,11 +83,8 @@ const UserTable = ({ users, handleOpenModal, handleDelete }: UserTableProps) => 
                     {Array.isArray(users) && users.length !== 0 ? (
                         users.map((user) => (
                         <tr key={user.id}>
-                            <td className="whitespace-nowrap py-4 px-6 pr-3 text-sm font-medium text-gray-900 ">
-                            {user.firstName}
-                            </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                            {user.lastName}
+                            {user.name}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {user.number}
@@ -88,15 +92,32 @@ const UserTable = ({ users, handleOpenModal, handleDelete }: UserTableProps) => 
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                             {user.email}
                             </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                            {user.subscription}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                            {user.trainer}
+                            </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {user?.startDate
-                                ? new Date(user.startDate).toLocaleDateString()
+                                ? new Date(user.startDate).toLocaleDateString('en-GB')
                                 : "N/A"}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {user?.endDate
-                                ? new Date(user.endDate).toLocaleDateString()
+                                ? new Date(user.endDate).toLocaleDateString('en-GB')
                                 : "N/A"}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                            {user.daysLeft || 'N/A'}
+                            </td>
+                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                            <button
+                                onClick={() => handlePause(user)}
+                                className="text-red-600 hover:cursor-pointer hover:text-red-900 bg-red-50 px-3 py-1 rounded-md"
+                            >
+                                {user.status}
+                            </button>
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button

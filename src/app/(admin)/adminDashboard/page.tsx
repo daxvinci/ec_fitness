@@ -21,6 +21,33 @@ const AdminDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
 
+
+const handlePause = async (user:UserDetails) => {
+  if (user.status !== "active" && user.status !== "paused") return;
+  const nextState = user.status === "active" ? "paused" : "active";
+    // Optimistically update UI
+    setUsers(users =>
+      users.map(u =>
+        u.id === user.id ? { ...u, status: nextState } : u
+      )
+    );
+  
+    try {
+      await axios.patch(`/api/users/${user.id}`, { status: nextState });
+      // Success: nothing else to do
+    } catch (error) {
+      // Revert change if API fails
+      setUsers(users =>
+        users.map(u =>
+          u.id === user.id ? { ...u, status: user.status } : u
+        )
+      );
+      console.log(error)
+      // Optionally show a toast or error message
+      alert("Failed to update user status. Please try again.");
+    }
+}
+
 const handleOpenModal = (user: UserDetails) => {
   setSelectedUser(user);
   setModalOpen(true);
@@ -38,6 +65,16 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
   );
   setModalOpen(false);
   setSelectedUser(null);
+};
+
+const handleDelete = async (userId:string) => {
+
+  const newUser = users.filter(user => user.id !== userId )
+  setUsers(newUser)
+  const result = await axios.delete(`/api/users/${userId}`)
+
+  console.log(result.data.users) //add toast notification
+
 };
 
   useEffect(() => {
@@ -80,15 +117,7 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
     fetchAdminAndUsers();
   }, []);
 
-  const handleDelete = async (userId:string) => {
-
-    const newUser = users.filter(user => user.id !== userId )
-    setUsers(newUser)
-    const result = await axios.delete(`/api/users/${userId}`)
-
-    console.log(result.data.users) //add toast notification
-
-  };
+ 
 
   if(loading){
     return (
@@ -122,7 +151,7 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
             <TotalStats />
 
             <div className="bg-white p-4 rounded-lg shadow-sm border">
-              <UserTable users={users} handleOpenModal={handleOpenModal} handleDelete={handleDelete} />
+              <UserTable users={users} handlePause={handlePause} handleOpenModal={handleOpenModal} handleDelete={handleDelete} />
             </div>
 
           </div>

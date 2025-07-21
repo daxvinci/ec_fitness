@@ -13,6 +13,7 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.0",
     "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "mongoose": "^8.16.3",
     "next": "15.3.2",
     "react": "^19.0.0",

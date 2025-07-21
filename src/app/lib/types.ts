@@ -1,7 +1,6 @@
 export type UserDetails = {
   id:string;
-  firstName: string;
-  lastName: string;
+  name: string;
   startDate:string | Date;
   endDate:string |Date;
   email: string;
@@ -9,8 +8,9 @@ export type UserDetails = {
   password: string;
   admin:boolean;
   role:string;
-  membership:string;
+  subscription:string;
   amount:number;
+  daysLeft:number;
   trainer:string;
   status:string;
   active:boolean;
