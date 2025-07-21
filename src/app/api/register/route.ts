@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   await dbConnect();
 
   const body = await req.json();
-  const { name, email, number, password } = body;
+  const { name, email, number, password,subscription,trainer,startDate,endDate } = body;
   const saltRounds = 10;
  
 
@@ -21,9 +21,13 @@ export async function POST(req: NextRequest) {
         { status: 409 }
       );
     }
+
+    if (!name || !email || !number || !subscription || !startDate || !endDate || !password) {
+      return NextResponse.json({ success: false, message: "All fields are required." },{status:400});
+    }
     
     const hashedPassword = await bcrypt.hash(password, saltRounds)
-    const user = await User.create({ name, email, number, password:hashedPassword});
+    const user = await User.create({ name, email, number, password:hashedPassword,subscription,trainer,startDate,endDate});
 
     const token = jwt.sign(
       { userId: user.id, email: user.email, firstName:user.firstName },

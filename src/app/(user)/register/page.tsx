@@ -54,14 +54,42 @@ const UserRegister = () => {
     name: "",
     email: "",
     number:"",
+    subscription:"",
+    trainer:"",
     password: "",
     confirmPassword: "",
+    startDate: "",
+    endDate: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    // If subscription changes, set startDate and endDate
+  if (name === "subscription") {
+    const today = new Date();
+    const endDate = new Date(today);
+
+    if (value === "daily") {
+      endDate.setDate(today.getDate() + 1);
+    } else if (value === "weekly") {
+      endDate.setDate(today.getDate() + 7);
+    } else if (value === "monthly") {
+      endDate.setMonth(today.getMonth() + 1);
+    } else if (value === "yearly") {
+      endDate.setFullYear(today.getFullYear() + 1);
+    }
+
+    setForm({
+      ...form,
+      subscription: value,
+      startDate: today.toISOString().slice(0, 10),
+      endDate: endDate.toISOString().slice(0, 10),
+    });
+  } else {
+    setForm({ ...form, [name]: value });
+  }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,10 +105,10 @@ const UserRegister = () => {
       const response = await axios.post("/api/register", form,{ timeout: 20000 });
       if (response.data.success) {
         // localStorage.setItem("token", response.data.token); not storing since no user dashboard
-        setTimeout(()=>{
-          router.push("/adminDashboard");
-        },5000)
-        alert('Registeration Successfull') //TO BE TOASTED
+        // setTimeout(()=>{
+        // },5000)
+        router.push("/adminDashboard");
+        // alert('Registeration Successfull') TO BE TOASTED
       } else {
         alert(response.data.message || "Registration failed!");
       }
@@ -185,6 +213,51 @@ const UserRegister = () => {
                     />
                   </div>
                 </div>
+                {/* Subscription Dropdown */}
+                <div>
+                  <label
+                    htmlFor="subscription"
+                    className="block text-sm/6 font-medium text-gray-900"
+                  >
+                    Subscription
+                  </label>
+                  <div className="mt-2">
+                    <select
+                      name="subscription"
+                      id="subscription"
+                      value={form.subscription}
+                      onChange={handleChange}
+                      required
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    >
+                      <option value="monthly">Monthly</option>
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="yearly">Yearly</option>
+                    </select>
+                  </div>
+                </div>
+                {/* Trainer Text Input */}
+                <div>
+                  <label
+                    htmlFor="trainer"
+                    className="block text-sm/6 font-medium text-gray-900"
+                  >
+                    Trainer
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      name="trainer"
+                      id="trainer"
+                      autoComplete="off"
+                      value={form.trainer}
+                      onChange={handleChange}
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    />
+                  </div>
+                </div>
+                
                 <div>
                   <div className="flex items-center justify-between">
                     <label

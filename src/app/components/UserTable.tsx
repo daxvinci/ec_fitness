@@ -9,39 +9,84 @@ type UserTableProps = {
     handleDelete: (userId: string) => void;
     handlePause: (userId: UserDetails) => void;
   };
+  
+      export function getDaysLeft(startDate: string | Date, endDate: string | Date): number | string {
+          if (!startDate || !endDate) return "N/A";
+          const now = new Date();
+          const end = new Date(endDate);
+        
+          // If end date is in the past, return 0 or "Expired"
+          if (end < now) return 0;
+        
+          // Calculate difference in milliseconds
+          const diff = end.getTime() - now.getTime();
+        
+          // Convert ms to days
+          return Math.ceil(diff / (1000 * 60 * 60 * 24));
+        }
+  
+        export function getUserStatus(user: UserDetails): string {
+          // If user is paused, keep as paused
+          if (user.status === "paused") return "paused";
+          // If user is manually set to inactive, keep as inactive
+          if (user.status === "inactive") return "inactive";
+          // If user is manually set to expired, keep as expired
+          if (user.status === "expired") return "expired";
+        
+          // Otherwise, determine by date
+          const daysLeft = getDaysLeft(user.startDate, user.endDate);
+          console.log(typeof daysLeft)
+          if (typeof daysLeft === "number") {
+            if (daysLeft <= 0) return "expired";
+            if (daysLeft <= 3) return "expiring"; // e.g., 3 days or less left
+            return "active";
+          }
+          return "active";
+        }
 
 const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTableProps) => {
+    
 
-    const [currentFilter,setCurrentFilter] = useState("All Members")
+        const filters = [
+            {name:"All Members",value:0,db_name:"all"},
+            {name:"Active",value:0,db_name:"active"},
+            {name:"Paused",value:0,db_name:"paused"},
+            {name:"Expiring Soon",value:0,db_name:"expiring"},
+            {name:"Expired",value:0,db_name:"expired"}
+        ]
+    
+        const tableHeaders = [
+            { name: "Name" },
+            { name: "Phone Number" },
+            { name: "Email" },
+            { name: "Sub" },
+            // { name: "Amount" }, 
+            { name: "Trainer" },
+            { name: "Start Date" },
+            { name: "Expiration Date" },
+            { name: "Days Left" },
+            { name: "Status" },
+            { name: "" }, // For Update button
+            { name: "" }, // For Delete button
+          ];
+    
+    const [currentFilter,setCurrentFilter] = useState("all");
+    const [activeFilter,setActiveFilter] = useState("All Members");
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [userToDelete, setUserToDelete] = useState<UserDetails | null>(null);
+    const filteredUsers = currentFilter === 'all'
+    ? users
+    : users.filter(user => getUserStatus(user) === currentFilter);
 
-    const filters = [
-        {name:"All Members",value:0},
-        {name:"Active",value:0},
-        {name:"Inactive",value:0},
-        {name:"Expiring Soon",value:0},
-        {name:"Expired",value:0}
-    ]
-
-    const tableHeaders = [
-        { name: "Name" },
-        { name: "Phone Number" },
-        { name: "Email" },
-        { name: "Sub" },
-        // { name: "Amount" }, 
-        { name: "Trainer" },
-        { name: "Start Date" },
-        { name: "Expiration Date" },
-        { name: "Days Left" },
-        { name: "Status" },
-        { name: "" }, // For Update button
-        { name: "" }, // For Delete button
-      ];
-
-
-    const handleFilter = (name:string) =>{
-        console.log("clicked")
-        setCurrentFilter(name)
+    const handleFilter = (db_name:string,name:string) =>{
+        setCurrentFilter(db_name)
+        setActiveFilter(name)
     }
+
+    const handleOpenDeleteModal = (user: UserDetails) => {
+        setUserToDelete(user);
+        setDeleteModalOpen(true);
+      };
 
     return ( 
         <>
@@ -54,9 +99,9 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
                 {filters.map((label, i) => (
                     <button 
                     key={i} 
-                    onClick={()=>handleFilter(label.name)}
-                    className={`px-3 py-1 hover:cursor-pointer text-gray-400  rounded ${currentFilter === label.name ? "bg-white text-gray-900 font-medium" : "hover:bg-gray-100"}`}>
-                    {label.name}({label.value})
+                    onClick={()=>handleFilter(label.db_name,label.name)}
+                    className={`px-3 py-1 hover:cursor-pointer text-gray-400  rounded ${activeFilter === label.name ? "bg-white text-gray-900 font-medium" : "hover:bg-gray-100"}`}>
+                    {label.name}({users.filter(user => (getUserStatus(user) === label.db_name)).length})
                     </button>
                 ))}
                 </div>
@@ -81,42 +126,98 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                     {Array.isArray(users) && users.length !== 0 ? (
-                        users.map((user) => (
+                        filteredUsers.map((user) => (
                         <tr key={user.id}>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${getUserStatus(user) === 'expired'
+                            ? 'text-red-500'
+                            : getUserStatus(user) === 'paused'
+                            ? 'text-gray-400'
+                            : getUserStatus(user) === 'expiring'
+                            ? 'text-yellow-500'
+                            : 'text-gray-900'} `}>
                             {user.name}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${getUserStatus(user) === 'expired'
+                            ? 'text-red-500'
+                            : getUserStatus(user) === 'paused'
+                            ? 'text-gray-400'
+                            : getUserStatus(user) === 'expiring'
+                            ? 'text-yellow-500'
+                            : 'text-gray-900'} `}>
                             {user.number}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${getUserStatus(user) === 'expired'
+                            ? 'text-red-500'
+                            : getUserStatus(user) === 'paused'
+                            ? 'text-gray-400'
+                            : getUserStatus(user) === 'expiring'
+                            ? 'text-yellow-500'
+                            : 'text-gray-900'} `}>
                             {user.email}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${getUserStatus(user) === 'expired'
+                            ? 'text-red-500'
+                            : getUserStatus(user) === 'paused'
+                            ? 'text-gray-400'
+                            : getUserStatus(user) === 'expiring'
+                            ? 'text-yellow-500'
+                            : 'text-gray-900'} `}>
                             {user.subscription}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${getUserStatus(user) === 'expired'
+                            ? 'text-red-500'
+                            : getUserStatus(user) === 'paused'
+                            ? 'text-gray-400'
+                            : getUserStatus(user) === 'expiring'
+                            ? 'text-yellow-500'
+                            : 'text-gray-900'} `}>
                             {user.trainer}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${getUserStatus(user) === 'expired'
+                            ? 'text-red-500'
+                            : getUserStatus(user) === 'paused'
+                            ? 'text-gray-400'
+                            : getUserStatus(user) === 'expiring'
+                            ? 'text-yellow-500'
+                            : 'text-gray-900'} `}>
                             {user?.startDate
                                 ? new Date(user.startDate).toLocaleDateString('en-GB')
                                 : "N/A"}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${getUserStatus(user) === 'expired'
+                            ? 'text-red-500'
+                            : getUserStatus(user) === 'paused'
+                            ? 'text-gray-400'
+                            : getUserStatus(user) === 'expiring'
+                            ? 'text-yellow-500'
+                            : 'text-gray-900'} `}>
                             {user?.endDate
                                 ? new Date(user.endDate).toLocaleDateString('en-GB')
                                 : "N/A"}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                            {user.daysLeft || 'N/A'}
+                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${getUserStatus(user) === 'expired'
+                            ? 'text-red-500'
+                            : getUserStatus(user) === 'paused'
+                            ? 'text-gray-400'
+                            : getUserStatus(user) === 'expiring'
+                            ? 'text-yellow-500'
+                            : 'text-gray-900'} `}>
+                            {getDaysLeft(user.startDate, user.endDate)}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button
                                 onClick={() => handlePause(user)}
                                 className="text-red-600 hover:cursor-pointer hover:text-red-900 bg-red-50 px-3 py-1 rounded-md"
                             >
-                                {user.status}
+                                {getUserStatus(user)}
                             </button>
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
@@ -129,7 +230,7 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button
-                                onClick={() => handleDelete(user.id)}
+                                onClick={() =>  handleOpenDeleteModal(user)}
                                 className="text-red-600 hover:cursor-pointer hover:text-red-900 bg-red-50 px-3 py-1 rounded-md"
                             >
                                 Delete
@@ -152,6 +253,42 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
                 </table>
                 </div>
             </div>
+
+
+            
+
+        {/* DELETE MODAL */}
+          { deleteModalOpen && 
+          <div className="modal-backdrop absolute inset-0 bg-black/50 z-50">
+            
+            <div className="p-6 absolute left-1/3 top-1/3 bg-gray-100 text-gray-800 shadow-2xl rounded-xl">
+                <h2 className="text-lg font-bold mb-2">Confirm Delete</h2>
+                <p>Are you sure you want to delete {userToDelete?.name}? Deleted Users cannot be recovered.</p>
+                <div className="flex gap-2 mt-4">
+                <button
+                    onClick={async () => {
+                    if (userToDelete) {
+                        handleDelete(userToDelete.id);
+                        setDeleteModalOpen(false);
+                        setUserToDelete(null);
+                    }
+                    }}
+                    className="bg-red-600 cursor-pointer text-white px-4 py-2 rounded"
+                >
+                    Yes, Delete
+                </button>
+                <button
+                    onClick={() => setDeleteModalOpen(false)}
+                    className="bg-gray-300 cursor-pointer px-4 py-2 rounded"
+                >
+                    Cancel
+                </button>
+                </div>
+            </div>
+          </div>
+            
+            }
+
         </>
      );
 }

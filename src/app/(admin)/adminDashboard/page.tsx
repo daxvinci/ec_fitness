@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Header from "@/app/components/Header";
 import UserTable from "@/app/components/UserTable";
 import TotalStats from "@/app/components/TotalStats";
+import { getUserStatus } from "@/app/components/UserTable";
 
 const AdminDashboard = () => {
 
@@ -23,8 +24,9 @@ const AdminDashboard = () => {
 
 
 const handlePause = async (user:UserDetails) => {
-  if (user.status !== "active" && user.status !== "paused") return;
-  const nextState = user.status === "active" ? "paused" : "active";
+  const status = getUserStatus(user)
+  if (status !== "active" && status !== "paused") return;
+  const nextState = status === "active" ? "paused" : "active";
     // Optimistically update UI
     setUsers(users =>
       users.map(u =>
@@ -59,7 +61,7 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
   setUsers(users =>
     users.map(u =>
       u.id === selectedUser.id
-        ? { ...u, startDate: new Date(startDateISO), endDate: new Date(endDateISO) }
+        ? { ...u, startDate: startDateISO, endDate: endDateISO }
         : u
     )
   );
