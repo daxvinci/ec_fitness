@@ -35,7 +35,6 @@ type UserTableProps = {
         
           // Otherwise, determine by date
           const daysLeft = getDaysLeft(user.startDate, user.endDate);
-          console.log(typeof daysLeft)
           if (typeof daysLeft === "number") {
             if (daysLeft <= 0) return "expired";
             if (daysLeft <= 3) return "expiring"; // e.g., 3 days or less left
