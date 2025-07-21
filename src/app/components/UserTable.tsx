@@ -82,11 +82,11 @@ const UserTable = ({ users, handleOpenModal, handleDelete }: UserTableProps) => 
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                             {user.lastName}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                            {user.email}
-                            </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {user.number}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                            {user.email}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {user?.startDate
