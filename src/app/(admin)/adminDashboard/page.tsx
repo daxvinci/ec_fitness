@@ -156,7 +156,7 @@ const handleDelete = async (userId:string) => {
 
           <div className="sub-main">
 
-            <TotalStats />
+            <TotalStats users={users} />
 
             <div className="bg-white p-4 rounded-lg shadow-sm border">
               <UserTable users={users} handlePause={handlePause} handleOpenModal={handleOpenModal} handleDelete={handleDelete} />
