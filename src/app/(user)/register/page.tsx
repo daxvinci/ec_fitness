@@ -2,10 +2,10 @@
 
 import Spinner from "@/app/components/Spinner";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 type MyJwtPayload = {
   userId: string;
@@ -64,6 +64,9 @@ const UserRegister = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const formToast = (message: string) => {
+    toast(message)
+  }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     // If subscription changes, set startDate and endDate
@@ -110,7 +113,7 @@ const UserRegister = () => {
           // setTimeout(()=>{
           // },5000)
           router.push("/adminDashboard");
-          // alert('Registeration Successfull') TO BE TOASTED
+          formToast("Registration successful! Redirecting to admin dashboard...");
         } else {
           alert(response.data.message || "Registration failed!");
         }
@@ -119,9 +122,9 @@ const UserRegister = () => {
       } catch (error) {
         setIsLoading(false);
         if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
-          alert("Request timed out. Please try again.");
+          formToast("Request timed out. Please try again.");
         }
-        console.error("Error registering user: ", error);
+        formToast("Error registering user: " + error);
       }
     },20000)
   };
@@ -155,7 +158,11 @@ const UserRegister = () => {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form className="space-y-6" action="https://formsubmit.co/ebukaokoro40@gmail.com" onSubmit={handleSubmit} method="POST">
+              <form
+                className="space-y-6"
+                onSubmit={handleSubmit}
+                method="POST"
+              >
                 <div>
                   <label
                     htmlFor="name"
@@ -260,7 +267,7 @@ const UserRegister = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <div className="flex items-center justify-between">
                     <label
@@ -315,36 +322,6 @@ const UserRegister = () => {
                     {isLoading ? "Registering...." : "Register"}
                   </button>
                 </div>
-                <div className="mt-6 text-center">
-                  Already have an account?{' '}
-                  <Link href="/login" className="underline text-indigo-600 hover:text-indigo-800">Log in</Link>
-                </div>
-                <input type="hidden" name="_next" value="/adminDashboard"/>
-                <input type="hidden" name="_subject" value="Welcome to EC-Fitness - Where Strength Meets Aesthetic"/>
-                <input type="hidden" name="_template" value="table"/>
-                <input 
-                type="hidden" 
-                name="_autoresponse" 
-                value={`
-                  Hi ${form.name},
-
-                  Welcome to EC Fitness — Enugu's most elite and aesthetic gym. 💪🏽✨
-                  We're thrilled to have you on board and can't wait to walk with you on your fitness journey.
-                  Whether you're here to gain strength, stay active, or just feel better — we've got your back.
-
-                  Expect top-tier equipment, motivating programs, and a supportive community to keep you going.
-
-                  📍 Opening Hours:
-                  Monday - Saturday | 7:30 AM - 8:00 PM
-
-                  Let's connect online too!
-                  📸 Follow us on Instagram: @ec_fitnessng
-                  (Stay updated with new programs, transformation stories & more.)
-
-                  See you at the gym!
-                  — The EC Fitness Team 🖤
-                  `}
-                  />
               </form>
             </div>
           </div>

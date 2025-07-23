@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const Navbar = () => {
+const Navbar = ({handleSignOut}:{handleSignOut:()=>void}) => {
   return (
     <nav className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -32,7 +32,7 @@ const Navbar = () => {
 
           {/* Right side - Sign Out and Profile Pic */}
           <div className="flex items-center">
-            <button className="text-gray-300 hover:cursor-pointer hover:text-white px-3 py-2 text-sm font-medium">
+            <button onClick={handleSignOut} className="text-gray-300 bg-gray-900 rounded-2xl hover:cursor-pointer hover:text-white px-3 py-2 text-sm font-medium">
               Sign Out
             </button>
             <div className="ml-4">

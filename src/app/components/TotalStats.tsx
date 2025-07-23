@@ -46,7 +46,7 @@ const TotalStats = ({users}:{users:Users}) => {
 
     return ( 
         <>
-             <div className="grid grid-cols-1 my-4 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 items-stretch">
+             <div className="grid grid-cols-1 my-4 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6 items-stretch">
               {memberStats.map((card, idx) => (
                 <div key={idx} className="bg-white p-4 rounded-lg shadow-sm border">
                     <p className="font-medium text-gray-700 flex gap-2 items-center justify-between">

@@ -108,7 +108,7 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
                 </div>
             </div>
 
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <div className="max-w-7xl">
                 
                 <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">

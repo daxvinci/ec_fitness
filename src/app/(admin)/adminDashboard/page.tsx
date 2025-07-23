@@ -77,13 +77,27 @@ const handleDelete = async (userId:string) => {
   const deletedUser = users.find(u => u.id === userId);
   const newUser = users.filter(user => user.id !== userId )
   setUsers(newUser)
-  const result = await axios.delete(`/api/users/${userId}`)
-  deleteToast(`Deleted ${deletedUser?.name || "user"} successfully!`);
-
-  console.log(result.data.users) //add toast notification
+  try{
+    const result = await axios.delete(`/api/users/${userId}`)
+    if(result.status !== 200) {
+      deleteToast("Failed to delete user");
+      throw new Error("Failed to delete user");
+    }else{
+      deleteToast(`Deleted ${deletedUser?.name || "user"} successfully!`);
+    }
+  }catch (error) {
+    setUsers(users => [...users, deletedUser!]);
+    deleteToast("Failed to delete user");
+    console.error("Error deleting user:", error);
+  }
 
 
 };
+
+const handleSignOut = () => {
+  localStorage.removeItem("token");
+  window.location.href = "/adminLogin";
+}
 
 
   useEffect(() => {
@@ -149,42 +163,48 @@ const handleDelete = async (userId:string) => {
   return (
     <>
       <div className="min-h-screen bg-gray-200">
-        <Navbar />
+        <Navbar handleSignOut={handleSignOut} />
 
-        <Header admin={admin}/>
+        <div className="body-wrapper container sm:px-6 lg:px-8 mx-auto py-8">
+          <Header admin={admin} />
 
-        <main className="container mx-auto py-8 flex flex-col items-center space-y-8">
+          <main className="flex flex-col items-center space-y-8">
+            <div className="sub-main">
+              <TotalStats users={users} />
 
-          <div className="sub-main">
-
-            <TotalStats users={users} />
-
-            <div className="bg-white p-4 rounded-lg shadow-sm border">
-              <UserTable users={users} handlePause={handlePause} handleOpenModal={handleOpenModal} handleDelete={handleDelete} />
+              <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm border">
+                <UserTable
+                  users={users}
+                  handlePause={handlePause}
+                  handleOpenModal={handleOpenModal}
+                  handleDelete={handleDelete}
+                />
+              </div>
             </div>
-
-          </div>
-
-        </main>
-
+          </main>
+        </div>
       </div>
 
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        startDate={selectedUser?.startDate
-          ? typeof selectedUser.startDate === "string"
-            ? selectedUser.startDate.slice(0, 10)
-            : selectedUser.startDate.toISOString().slice(0, 10)
-          : ""}
-        endDate={selectedUser?.endDate
-          ? typeof selectedUser.endDate === "string"
-            ? selectedUser.endDate.slice(0, 10)
-            : selectedUser.endDate.toISOString().slice(0, 10)
-          : ""}
+        startDate={
+          selectedUser?.startDate
+            ? typeof selectedUser.startDate === "string"
+              ? selectedUser.startDate.slice(0, 10)
+              : selectedUser.startDate.toISOString().slice(0, 10)
+            : ""
+        }
+        endDate={
+          selectedUser?.endDate
+            ? typeof selectedUser.endDate === "string"
+              ? selectedUser.endDate.slice(0, 10)
+              : selectedUser.endDate.toISOString().slice(0, 10)
+            : ""
+        }
         onSet={handleSetDates}
       />
-     <ToastContainer />
+      <ToastContainer />
     </>
   );
 }
