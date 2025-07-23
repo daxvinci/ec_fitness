@@ -23,7 +23,8 @@ const AdminDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
 
-const notify = () => toast("Wow so easy!");
+const deleteToast = (deleteMessage:string) => toast(deleteMessage);
+const updateToast = (updateMessage:string) => toast(updateMessage);
 
 const handlePause = async (user:UserDetails) => {
   const status = getUserStatus(user)
@@ -68,16 +69,19 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
     )
   );
   setModalOpen(false);
+  updateToast(`Updated ${selectedUser.name}'s dates successfully!`);
   setSelectedUser(null);
 };
 
 const handleDelete = async (userId:string) => {
-
+  const deletedUser = users.find(u => u.id === userId);
   const newUser = users.filter(user => user.id !== userId )
   setUsers(newUser)
   const result = await axios.delete(`/api/users/${userId}`)
+  deleteToast(`Deleted ${deletedUser?.name || "user"} successfully!`);
 
   console.log(result.data.users) //add toast notification
+
 
 };
 
@@ -146,9 +150,6 @@ const handleDelete = async (userId:string) => {
     <>
       <div className="min-h-screen bg-gray-200">
         <Navbar />
-        <button onClick={toast}>
-          test toast
-        </button>
 
         <Header admin={admin}/>
 

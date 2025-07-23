@@ -234,7 +234,7 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button
                                 onClick={() => handleOpenModal(user)}
-                                className="text-indigo-600 hover:cursor-pointer hover:text-indigo-900 bg-indigo-50 px-3 py-1 rounded-md"
+                                className="bg-indigo-400 hover:cursor-pointer hover:bg-indigo-900 text-indigo-50 px-3 py-1 rounded-md"
                             >
                                 Update
                             </button>
@@ -242,7 +242,7 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button
                                 onClick={() =>  handleOpenDeleteModal(user)}
-                                className="text-red-600 hover:cursor-pointer hover:text-red-900 bg-red-50 px-3 py-1 rounded-md"
+                                className="bg-red-400 hover:cursor-pointer hover:bg-red-600 text-red-50 px-3 py-1 rounded-md"
                             >
                                 Delete
                             </button>
@@ -277,7 +277,7 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
                 <p>Are you sure you want to delete {userToDelete?.name}? Deleted Users cannot be recovered.</p>
                 <div className="flex gap-2 mt-4">
                 <button
-                    onClick={async () => {
+                    onClick={ () => {
                     if (userToDelete) {
                         handleDelete(userToDelete.id);
                         setDeleteModalOpen(false);
