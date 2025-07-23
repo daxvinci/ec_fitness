@@ -94,33 +94,36 @@ const UserRegister = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setTimeout(async ()=>{
 
-    if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match!");
-      setIsLoading(false);
-      return;
-    }
-    try {
-      const response = await axios.post("/api/register", form,{ timeout: 20000 });
-      if (response.data.success) {
-        // localStorage.setItem("token", response.data.token); not storing since no user dashboard
-        // setTimeout(()=>{
-        // },5000)
-        router.push("/adminDashboard");
-        // alert('Registeration Successfull') TO BE TOASTED
-      } else {
-        alert(response.data.message || "Registration failed!");
+      setIsLoading(true);
+  
+      if (form.password !== form.confirmPassword) {
+        alert("Passwords do not match!");
+        setIsLoading(false);
+        return;
       }
-      setIsLoading(false);
-      console.log("Server response:", response.data);
-    } catch (error) {
-      setIsLoading(false);
-      if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
-        alert("Request timed out. Please try again.");
+      try {
+        const response = await axios.post("/api/register", form,{ timeout: 20000 });
+        if (response.data.success) {
+          // localStorage.setItem("token", response.data.token); not storing since no user dashboard
+          // setTimeout(()=>{
+          // },5000)
+          router.push("/adminDashboard");
+          // alert('Registeration Successfull') TO BE TOASTED
+        } else {
+          alert(response.data.message || "Registration failed!");
+        }
+        setIsLoading(false);
+        console.log("Server response:", response.data);
+      } catch (error) {
+        setIsLoading(false);
+        if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
+          alert("Request timed out. Please try again.");
+        }
+        console.error("Error registering user: ", error);
       }
-      console.error("Error registering user: ", error);
-    }
+    },20000)
   };
 
   if(loading){
@@ -152,7 +155,7 @@ const UserRegister = () => {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form className="space-y-6" onSubmit={handleSubmit} method="POST">
+              <form className="space-y-6" action="https://formsubmit.co/ebukaokoro40@gmail.com" onSubmit={handleSubmit} method="POST">
                 <div>
                   <label
                     htmlFor="name"
@@ -316,6 +319,32 @@ const UserRegister = () => {
                   Already have an account?{' '}
                   <Link href="/login" className="underline text-indigo-600 hover:text-indigo-800">Log in</Link>
                 </div>
+                <input type="hidden" name="_next" value="/adminDashboard"/>
+                <input type="hidden" name="_subject" value="Welcome to EC-Fitness - Where Strength Meets Aesthetic"/>
+                <input type="hidden" name="_template" value="table"/>
+                <input 
+                type="hidden" 
+                name="_autoresponse" 
+                value={`
+                  Hi ${form.name},
+
+                  Welcome to EC Fitness — Enugu's most elite and aesthetic gym. 💪🏽✨
+                  We're thrilled to have you on board and can't wait to walk with you on your fitness journey.
+                  Whether you're here to gain strength, stay active, or just feel better — we've got your back.
+
+                  Expect top-tier equipment, motivating programs, and a supportive community to keep you going.
+
+                  📍 Opening Hours:
+                  Monday - Saturday | 7:30 AM - 8:00 PM
+
+                  Let's connect online too!
+                  📸 Follow us on Instagram: @ec_fitnessng
+                  (Stay updated with new programs, transformation stories & more.)
+
+                  See you at the gym!
+                  — The EC Fitness Team 🖤
+                  `}
+                  />
               </form>
             </div>
           </div>

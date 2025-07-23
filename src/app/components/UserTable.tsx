@@ -28,6 +28,8 @@ type UserTableProps = {
         export function getUserStatus(user: UserDetails): string {
           // If user is paused, keep as paused
           if (user.status === "paused") return "paused";
+          // If user is expiring, keep as paused
+          if (user.status === "expiring") return "paused";
           // If user is manually set to inactive, keep as inactive
           if (user.status === "inactive") return "inactive";
           // If user is manually set to expired, keep as expired
@@ -214,7 +216,17 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button
                                 onClick={() => handlePause(user)}
-                                className="text-red-600 hover:cursor-pointer hover:text-red-900 bg-red-50 px-3 py-1 rounded-md"
+                                className=
+                                {`hover:cursor-pointer
+                                ${getUserStatus(user) === 'expired'
+                                    ? 'text-red-500 bg-red-50'
+                                    : getUserStatus(user) === 'paused'
+                                    ? 'text-gray-400 bg-gray-50'
+                                    : getUserStatus(user) === 'expiring'
+                                    ? 'text-yellow-500 bg-yellow-50'
+                                    : 'text-green-500 bg-green-50'}
+                                 px-3 py-1 rounded-md`
+                                }
                             >
                                 {getUserStatus(user)}
                             </button>
@@ -258,7 +270,7 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
 
         {/* DELETE MODAL */}
           { deleteModalOpen && 
-          <div className="modal-backdrop absolute inset-0 bg-black/50 z-50">
+          <div className="modal-backdrop fixed flex justify-center items-center min-h-screen inset-0 bg-black/50 z-50">
             
             <div className="p-6 absolute left-1/3 top-1/3 bg-gray-100 text-gray-800 shadow-2xl rounded-xl">
                 <h2 className="text-lg font-bold mb-2">Confirm Delete</h2>

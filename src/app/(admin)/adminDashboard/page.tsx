@@ -10,6 +10,7 @@ import Header from "@/app/components/Header";
 import UserTable from "@/app/components/UserTable";
 import TotalStats from "@/app/components/TotalStats";
 import { getUserStatus } from "@/app/components/UserTable";
+import { ToastContainer, toast } from 'react-toastify';
 
 const AdminDashboard = () => {
 
@@ -22,11 +23,12 @@ const AdminDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
 
+const notify = () => toast("Wow so easy!");
 
 const handlePause = async (user:UserDetails) => {
   const status = getUserStatus(user)
-  if (status !== "active" && status !== "paused") return;
-  const nextState = status === "active" ? "paused" : "active";
+  if (status !== "active" && status !== "paused" && status !== "expiring") return;
+  const nextState = (status === "active" || status === "expiring") ? "paused" : "active";
     // Optimistically update UI
     setUsers(users =>
       users.map(u =>
@@ -78,6 +80,7 @@ const handleDelete = async (userId:string) => {
   console.log(result.data.users) //add toast notification
 
 };
+
 
   useEffect(() => {
     const fetchAdminAndUsers = async () => {
@@ -143,6 +146,9 @@ const handleDelete = async (userId:string) => {
     <>
       <div className="min-h-screen bg-gray-200">
         <Navbar />
+        <button onClick={toast}>
+          test toast
+        </button>
 
         <Header admin={admin}/>
 
@@ -177,7 +183,7 @@ const handleDelete = async (userId:string) => {
           : ""}
         onSet={handleSetDates}
       />
-
+     <ToastContainer />
     </>
   );
 }
