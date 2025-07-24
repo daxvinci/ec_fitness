@@ -40,14 +40,13 @@ const handlePause = async (user:UserDetails) => {
     try {
       await axios.patch(`/api/users/${user.id}`, { status: nextState });
       // Success: nothing else to do
-    } catch (error) {
+    } catch {
       // Revert change if API fails
       setUsers(users =>
         users.map(u =>
           u.id === user.id ? { ...u, status: user.status } : u
         )
       );
-      console.log(error)
       // Optionally show a toast or error message
       alert("Failed to update user status. Please try again.");
     }
@@ -85,10 +84,9 @@ const handleDelete = async (userId:string) => {
     }else{
       deleteToast(`Deleted ${deletedUser?.name || "user"} successfully!`);
     }
-  }catch (error) {
+  }catch {
     setUsers(users => [...users, deletedUser!]);
     deleteToast("Failed to delete user");
-    console.error("Error deleting user:", error);
   }
 
 

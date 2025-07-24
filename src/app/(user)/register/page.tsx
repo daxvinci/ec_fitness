@@ -97,36 +97,41 @@ const UserRegister = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setTimeout(async ()=>{
+    // setTimeout(async ()=>{
 
-      setIsLoading(true);
-  
-      if (form.password !== form.confirmPassword) {
-        alert("Passwords do not match!");
-        setIsLoading(false);
-        return;
+    // },20000)
+    setIsLoading(true);
+
+    if (form.password !== form.confirmPassword) {
+      alert("Passwords do not match!");
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const response = await axios.post("/api/register", form,{ timeout: 20000 });
+      if (response.data.success) {
+        // localStorage.setItem("token", response.data.token); not storing since no user dashboard
+        // setTimeout(()=>{
+        // },5000)
+        formToast("Registration successful! Redirecting to admin dashboard...");
+        router.push("/adminDashboard");
+      } else {
+        alert(response.data.message || "Registration failed!");
       }
-      try {
-        const response = await axios.post("/api/register", form,{ timeout: 20000 });
-        if (response.data.success) {
-          // localStorage.setItem("token", response.data.token); not storing since no user dashboard
-          // setTimeout(()=>{
-          // },5000)
-          router.push("/adminDashboard");
-          formToast("Registration successful! Redirecting to admin dashboard...");
-        } else {
-          alert(response.data.message || "Registration failed!");
-        }
-        setIsLoading(false);
-        console.log("Server response:", response.data);
-      } catch (error) {
-        setIsLoading(false);
-        if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
-          formToast("Request timed out. Please try again.");
-        }
-        formToast("Error registering user: " + error);
+      setIsLoading(false);
+      console.log("Server response:", response.data);
+    } catch (error) {
+      setIsLoading(false);
+      if (
+        axios.isAxiosError(error) &&
+        (error.code === "ECONNABORTED" || error.code === "ECONNRESET")
+      ) {
+        alert("Request timed out. Please try again.");
       }
-    },20000)
+      // formToast("Error registering user: " + error);
+      alert("error : " + error)
+
+    }
   };
 
   if(loading){
