@@ -6,7 +6,7 @@ import { UserDetails } from "../lib/types";
 type UserTableProps = {
     users: UserDetails[];
     handleOpenModal: (user: UserDetails) => void;
-    handleDelete: (userId: string) => void;
+    // handleDelete: (userId: string) => void;
     handlePause: (userId: UserDetails) => void;
   };
   
@@ -45,7 +45,7 @@ type UserTableProps = {
           return "active";
         }
 
-const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTableProps) => {
+const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
     
 
         const filters = [
@@ -68,208 +68,239 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
             { name: "Days Left" },
             { name: "Status" },
             { name: "" }, // For Update button
-            { name: "" }, // For Delete button
+            // { name: "" },  For Delete button
           ];
     
     const [currentFilter,setCurrentFilter] = useState("all");
     const [activeFilter,setActiveFilter] = useState("All Members");
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [userToDelete, setUserToDelete] = useState<UserDetails | null>(null);
-    const filteredUsers = currentFilter === 'all'
-    ? users
-    : users.filter(user => getUserStatus(user) === currentFilter);
+    const [searchFilter,setSearchFilter] = useState("");
+    // const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    // const [userToDelete, setUserToDelete] = useState<UserDetails | null>(null);
+    const filteredUsers = users.filter((user) =>currentFilter === "all" || getUserStatus(user) === currentFilter)
+            .filter((user) =>
+                user.name.toLowerCase().includes(searchFilter) ||
+                user.email.toLowerCase().includes(searchFilter) ||
+                user.number.toLowerCase().includes(searchFilter) ||
+                user.subscription.toLowerCase().includes(searchFilter) ||
+                (user.trainer
+                  ? user.trainer.toLowerCase().includes(searchFilter)
+                  : false)
+            );
 
     const handleFilter = (db_name:string,name:string) =>{
         setCurrentFilter(db_name)
         setActiveFilter(name)
     }
 
-    const handleOpenDeleteModal = (user: UserDetails) => {
-        setUserToDelete(user);
-        setDeleteModalOpen(true);
-      };
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const searchTerm = e.target.value.toLowerCase();
+        setSearchFilter(searchTerm);
+    }
 
-    return ( 
-        <>
+    // const handleOpenDeleteModal = (user: UserDetails) => {
+    //     setUserToDelete(user);
+    //     setDeleteModalOpen(true);
+    //   };
 
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Members</h2>
+    return (
+      <>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Members</h2>
 
-            {/* Filters */}
-            <div className="filter-container inline-block">
-                <div className="flex flex-wrap gap-2 rounded-lg bg-gray-200 py-1 px-2 mb-4">
-                {filters.map((label, i) => (
-                    <button 
-                    key={i} 
-                    onClick={()=>handleFilter(label.db_name,label.name)}
-                    className={`px-3 py-1 hover:cursor-pointer text-gray-400  rounded ${activeFilter === label.name ? "bg-white text-gray-900 font-medium" : "hover:bg-gray-100"}`}>
-                    {label.name}({users.filter(user => (getUserStatus(user) === label.db_name)).length})
-                    </button>
-                ))}
-                </div>
-            </div>
+        {/* Filters */}
+        <div className="filter-container w-full flex mb-4 justify-between items-center">
+          <div className="flex gap-2 rounded-lg bg-gray-200 py-1 px-2">
+            {filters.map((label, i) => (
+              <button
+                key={i}
+                onClick={() => handleFilter(label.db_name, label.name)}
+                className={`px-3 py-1 hover:cursor-pointer text-gray-400  rounded ${
+                  activeFilter === label.name
+                    ? "bg-white text-gray-900 font-medium"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                {label.name}(
+                {
+                  users.filter((user) => getUserStatus(user) === label.db_name)
+                    .length
+                }
+                )
+              </button>
+            ))}
+          </div>
+          <div className="search w-[40%] bg-gray-500 rounded-2xl">
+            <input
+              onChange={handleSearch}
+              className="w-full px-3 py-1 rounded-2xl"
+              placeholder="Search for member..."
+              type="search"
+              name="search"
+              id="search"
+            />
+          </div>
+        </div>
 
-            <div className="max-w-7xl">
-                
-                <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                    <tr>
-                    {tableHeaders.map((header, idx) => (
-                        <th
-                            key={idx}
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            {header.name}
-                        </th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                    {Array.isArray(users) && users.length !== 0 ? (
-                        filteredUsers.map((user) => (
-                        <tr key={user.id}>
-                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
-                            ${getUserStatus(user) === 'expired'
-                            ? 'text-red-500'
-                            : getUserStatus(user) === 'paused'
-                            ? 'text-gray-400'
-                            : getUserStatus(user) === 'expiring'
-                            ? 'text-yellow-500'
-                            : 'text-gray-900'} `}>
-                            {user.name}
-                            </td>
-                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
-                            ${getUserStatus(user) === 'expired'
-                            ? 'text-red-500'
-                            : getUserStatus(user) === 'paused'
-                            ? 'text-gray-400'
-                            : getUserStatus(user) === 'expiring'
-                            ? 'text-yellow-500'
-                            : 'text-gray-900'} `}>
-                            {user.number}
-                            </td>
-                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
-                            ${getUserStatus(user) === 'expired'
-                            ? 'text-red-500'
-                            : getUserStatus(user) === 'paused'
-                            ? 'text-gray-400'
-                            : getUserStatus(user) === 'expiring'
-                            ? 'text-yellow-500'
-                            : 'text-gray-900'} `}>
-                            {user.email}
-                            </td>
-                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
-                            ${getUserStatus(user) === 'expired'
-                            ? 'text-red-500'
-                            : getUserStatus(user) === 'paused'
-                            ? 'text-gray-400'
-                            : getUserStatus(user) === 'expiring'
-                            ? 'text-yellow-500'
-                            : 'text-gray-900'} `}>
-                            {user.subscription}
-                            </td>
-                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
-                            ${getUserStatus(user) === 'expired'
-                            ? 'text-red-500'
-                            : getUserStatus(user) === 'paused'
-                            ? 'text-gray-400'
-                            : getUserStatus(user) === 'expiring'
-                            ? 'text-yellow-500'
-                            : 'text-gray-900'} `}>
-                            {user.trainer}
-                            </td>
-                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
-                            ${getUserStatus(user) === 'expired'
-                            ? 'text-red-500'
-                            : getUserStatus(user) === 'paused'
-                            ? 'text-gray-400'
-                            : getUserStatus(user) === 'expiring'
-                            ? 'text-yellow-500'
-                            : 'text-gray-900'} `}>
-                            {user?.startDate
-                                ? new Date(user.startDate).toLocaleDateString('en-GB')
-                                : "N/A"}
-                            </td>
-                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
-                            ${getUserStatus(user) === 'expired'
-                            ? 'text-red-500'
-                            : getUserStatus(user) === 'paused'
-                            ? 'text-gray-400'
-                            : getUserStatus(user) === 'expiring'
-                            ? 'text-yellow-500'
-                            : 'text-gray-900'} `}>
-                            {user?.endDate
-                                ? new Date(user.endDate).toLocaleDateString('en-GB')
-                                : "N/A"}
-                            </td>
-                            <td className={`whitespace-nowrap px-6 py-4 text-sm 
-                            ${getUserStatus(user) === 'expired'
-                            ? 'text-red-500'
-                            : getUserStatus(user) === 'paused'
-                            ? 'text-gray-400'
-                            : getUserStatus(user) === 'expiring'
-                            ? 'text-yellow-500'
-                            : 'text-gray-900'} `}>
-                            {getDaysLeft(user.startDate, user.endDate)}
-                            </td>
-                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <button
-                                onClick={() => handlePause(user)}
-                                className=
-                                {`hover:cursor-pointer
-                                ${getUserStatus(user) === 'expired'
-                                    ? 'text-red-500 bg-red-50'
-                                    : getUserStatus(user) === 'paused'
-                                    ? 'text-gray-400 bg-gray-50'
-                                    : getUserStatus(user) === 'expiring'
-                                    ? 'text-yellow-500 bg-yellow-50'
-                                    : 'text-green-500 bg-green-50'}
-                                 px-3 py-1 rounded-md`
+        {filteredUsers.length === 0 && (
+          <div className="w-full text-center py-8 text-gray-500 text-lg font-semibold">
+            No members found matching your search
+          </div>
+        )}
+
+        <div className="max-w-7xl">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  {tableHeaders.map((header, idx) => (
+                    <th
+                      key={idx}
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {header.name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {Array.isArray(users) && users.length !== 0 ? (
+                  filteredUsers.map((user) => (
+                    <tr key={user.id}>
+                      <td
+                        className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${
+                              getUserStatus(user) === "paused"
+                                ? "text-gray-400"
+                                : "text-gray-900"
+                            } `}
+                      >
+                        {user.name}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap px-6 py-4 text-sm 
+                           ${
+                             getUserStatus(user) === "paused"
+                               ? "text-gray-400"
+                               : "text-gray-900"
+                           } `}
+                      >
+                        {user.number}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${
+                              getUserStatus(user) === "paused"
+                                ? "text-gray-400"
+                                : "text-gray-900"
+                            }`}
+                      >
+                        {user.email}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap px-6 py-4 text-sm 
+                           ${
+                             getUserStatus(user) === "paused"
+                               ? "text-gray-400"
+                               : "text-gray-900"
+                           } `}
+                      >
+                        {user.subscription}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${
+                              getUserStatus(user) === "paused"
+                                ? "text-gray-400"
+                                : "text-gray-900"
+                            } `}
+                      >
+                        {user.trainer}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${
+                              getUserStatus(user) === "paused"
+                                ? "text-gray-400"
+                                : "text-gray-900"
+                            }`}
+                      >
+                        {user?.startDate
+                          ? new Date(user.startDate).toLocaleDateString("en-GB")
+                          : "N/A"}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${
+                              getUserStatus(user) === "paused"
+                                ? "text-gray-400"
+                                : "text-gray-900"
+                            }`}
+                      >
+                        {user?.endDate
+                          ? new Date(user.endDate).toLocaleDateString("en-GB")
+                          : "N/A"}
+                      </td>
+                      <td
+                        className={`whitespace-nowrap px-6 py-4 text-sm 
+                           ${
+                             getUserStatus(user) === "paused"
+                               ? "text-gray-400"
+                               : "text-gray-900"
+                           }`}
+                      >
+                        {getDaysLeft(user.startDate, user.endDate)}
+                      </td>
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                        <button
+                          onClick={() => handlePause(user)}
+                          className={`hover:cursor-pointer
+                                ${
+                                  getUserStatus(user) === "expired"
+                                    ? "text-red-500 bg-red-50"
+                                    : getUserStatus(user) === "paused"
+                                    ? "text-gray-400 bg-gray-50"
+                                    : getUserStatus(user) === "expiring"
+                                    ? "text-yellow-500 bg-yellow-50"
+                                    : "text-green-500 bg-green-50"
                                 }
-                            >
-                                {getUserStatus(user)}
-                            </button>
-                            </td>
-                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <button
-                                onClick={() => handleOpenModal(user)}
-                                className="bg-indigo-400 hover:cursor-pointer hover:bg-indigo-900 text-indigo-50 px-3 py-1 rounded-md"
-                            >
-                                Update
-                            </button>
-                            </td>
-                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                 px-3 py-1 rounded-md`}
+                        >
+                          {getUserStatus(user)}
+                        </button>
+                      </td>
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                        <button
+                          onClick={() => handleOpenModal(user)}
+                          className="bg-indigo-400 hover:cursor-pointer hover:bg-indigo-900 text-indigo-50 px-3 py-1 rounded-md"
+                        >
+                          Update
+                        </button>
+                      </td>
+                      {/* <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <button
                                 onClick={() =>  handleOpenDeleteModal(user)}
                                 className="bg-red-400 hover:cursor-pointer hover:bg-red-600 text-red-50 px-3 py-1 rounded-md"
                             >
                                 Delete
                             </button>
-                            </td>
-                        </tr>
-                        ))
-                    ) : (
-                        <tr>
-                        <td
-                            colSpan={6}
-                            className="text-center py-4 text-gray-500"
-                        >
-                            No Members Registered
-                        </td>
-                        </tr>
-                    )}
-                    {/* More rows here */}
-                    </tbody>
-                </table>
-                </div>
-            </div>
-
-
-            
+                            </td> */}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="text-center py-4 text-gray-500">
+                      No Members Registered
+                    </td>
+                  </tr>
+                )}
+                {/* More rows here */}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         {/* DELETE MODAL */}
-          { deleteModalOpen && 
+        {/* { deleteModalOpen && 
           <div className="modal-backdrop fixed flex justify-center items-center min-h-screen inset-0 bg-black/50 z-50">
             
             <div className="p-6 absolute left-1/3 top-1/3 bg-gray-100 text-gray-800 shadow-2xl rounded-xl">
@@ -298,10 +329,9 @@ const UserTable = ({ users, handleOpenModal, handleDelete,handlePause }: UserTab
             </div>
           </div>
             
-            }
-
-        </>
-     );
+            } */}
+      </>
+    );
 }
  
 export default UserTable;

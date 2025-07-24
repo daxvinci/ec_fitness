@@ -23,7 +23,7 @@ const AdminDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
 
-const deleteToast = (deleteMessage:string) => toast(deleteMessage);
+// const deleteToast = (deleteMessage:string) => toast(deleteMessage);
 const updateToast = (updateMessage:string) => toast(updateMessage);
 
 const handlePause = async (user:UserDetails) => {
@@ -72,25 +72,25 @@ const handleSetDates = async (startDateISO: string, endDateISO: string) => {
   setSelectedUser(null);
 };
 
-const handleDelete = async (userId:string) => {
-  const deletedUser = users.find(u => u.id === userId);
-  const newUser = users.filter(user => user.id !== userId )
-  setUsers(newUser)
-  try{
-    const result = await axios.delete(`/api/users/${userId}`)
-    if(result.status !== 200) {
-      deleteToast("Failed to delete user");
-      throw new Error("Failed to delete user");
-    }else{
-      deleteToast(`Deleted ${deletedUser?.name || "user"} successfully!`);
-    }
-  }catch {
-    setUsers(users => [...users, deletedUser!]);
-    deleteToast("Failed to delete user");
-  }
+// const handleDelete = async (userId:string) => {
+//   const deletedUser = users.find(u => u.id === userId);
+//   const newUser = users.filter(user => user.id !== userId )
+//   setUsers(newUser)
+//   try{
+//     const result = await axios.delete(`/api/users/${userId}`)
+//     if(result.status !== 200) {
+//       deleteToast("Failed to delete user");
+//       throw new Error("Failed to delete user");
+//     }else{
+//       deleteToast(`Deleted ${deletedUser?.name || "user"} successfully!`);
+//     }
+//   }catch {
+//     setUsers(users => [...users, deletedUser!]);
+//     deleteToast("Failed to delete user");
+//   }
 
 
-};
+// };
 
 const handleSignOut = () => {
   localStorage.removeItem("token");
@@ -175,7 +175,7 @@ const handleSignOut = () => {
                   users={users}
                   handlePause={handlePause}
                   handleOpenModal={handleOpenModal}
-                  handleDelete={handleDelete}
+                  // handleDelete={handleDelete}
                 />
               </div>
             </div>

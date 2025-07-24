@@ -5,7 +5,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { toast } from "react-toastify";
 
 type MyJwtPayload = {
   userId: string;
@@ -54,7 +53,7 @@ const UserRegister = () => {
     name: "",
     email: "",
     number:"",
-    subscription:"",
+    subscription:"monthly",
     trainer:"",
     password: "",
     confirmPassword: "",
@@ -64,9 +63,6 @@ const UserRegister = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const formToast = (message: string) => {
-    toast(message)
-  }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     // If subscription changes, set startDate and endDate
@@ -112,8 +108,7 @@ const UserRegister = () => {
       if (response.data.success) {
         // localStorage.setItem("token", response.data.token); not storing since no user dashboard
         // setTimeout(()=>{
-        // },5000)
-        formToast("Registration successful! Redirecting to admin dashboard...");
+        // },3000)
         router.push("/adminDashboard");
       } else {
         alert(response.data.message || "Registration failed!");
@@ -122,14 +117,25 @@ const UserRegister = () => {
       console.log("Server response:", response.data);
     } catch (error) {
       setIsLoading(false);
-      if (
-        axios.isAxiosError(error) &&
-        (error.code === "ECONNABORTED" || error.code === "ECONNRESET")
-      ) {
-        alert("Request timed out. Please try again.");
+      if (axios.isAxiosError(error)) {
+        if (error.code === "ECONNABORTED" || error.code === "ECONNRESET") {
+          alert("Request timed out. Please try again.");
+        } else if (error.response) {
+          alert(
+            "Server error: " + (error.response.data?.message || error.message)
+          );
+        } else if (error.request) {
+          alert("No response from server. Please check your network.");
+        } else {
+          alert("Axios error: " + error.message);
+        }
+      } else if (error && typeof error === "object" && "message" in error) {
+        // Non-Axios error with message
+        alert("Unexpected error: " + (error as { message: string }).message);
+      } else {
+        // Completely unknown error
+        alert("Unexpected error occurred.");
       }
-      // formToast("Error registering user: " + error);
-      alert("error : " + error)
 
     }
   };
