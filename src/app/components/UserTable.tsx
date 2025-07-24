@@ -131,7 +131,7 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
           <div className="search w-[40%] bg-gray-500 rounded-2xl">
             <input
               onChange={handleSearch}
-              className="w-full px-3 py-1 rounded-2xl"
+              className="w-full px-3 py-1 outline-0 rounded-2xl"
               placeholder="Search for member..."
               type="search"
               name="search"
