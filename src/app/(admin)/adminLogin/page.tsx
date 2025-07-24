@@ -27,15 +27,15 @@ const AdminLogin = () => {
         localStorage.setItem("token", response.data.token);
         router.push("/adminDashboard");
       }
-      alert(response.data.message);
+      // alert(response.data.message);
       setIsLoading(false);
-      console.log("Server response:", response.data);
+      // console.log("Server response:", response.data);
     } catch (error) {
       setIsLoading(false); 
       if (axios.isAxiosError(error) && error.code === "ECONNABORTED") {
         alert("Request timed out. Please try again.");
       }
-      console.error("Error Logging admin:", error);
+      // console.error("Error Logging admin:", error);
     }
   };
 

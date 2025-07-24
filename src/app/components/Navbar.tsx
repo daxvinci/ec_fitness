@@ -32,7 +32,7 @@ const Navbar = ({handleSignOut}:{handleSignOut:()=>void}) => {
 
           {/* Right side - Sign Out and Profile Pic */}
           <div className="flex items-center">
-            <button onClick={handleSignOut} className="text-gray-300 bg-gray-900 rounded-2xl hover:cursor-pointer hover:text-white px-3 py-2 text-sm font-medium">
+            <button onClick={handleSignOut} className="text-gray-300 bg-gray-900 rounded-lg hover:cursor-pointer hover:text-white px-3 py-2 text-sm font-medium">
               Sign Out
             </button>
             <div className="ml-4">
