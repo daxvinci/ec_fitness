@@ -182,7 +182,7 @@ const AdminRegister = () => {
                 Already Registered?
                 <Link
                   href="/adminLogin"
-                  className="underline ml-4 decoration-indigo-600 text-white/80"
+                  className="underline italic ml-4 decoration-indigo-600 text-white/80"
                 >
                   Log in
                 </Link>

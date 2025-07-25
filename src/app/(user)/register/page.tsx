@@ -1,6 +1,6 @@
 "use client"
 
-import Spinner from "@/app/components/Spinner";
+import Loading from "@/app/components/Loading";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -143,8 +143,8 @@ const UserRegister = () => {
   if(loading){
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
-        <Spinner />
-        <h1 className="text-2xl text-gray-700 font-bold mt-4">Loading...</h1>
+        <Loading />
+        {/* <h1 className="text-2xl text-gray-700 font-bold mt-4">Loading...</h1> */}
       </div>
   );
   }

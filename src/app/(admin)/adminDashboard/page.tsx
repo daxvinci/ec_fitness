@@ -2,7 +2,6 @@
 
 import Modal from "@/app/components/Modal";
 import Navbar from "@/app/components/Navbar";
-import Spinner from "@/app/components/Spinner";
 import { AdminDetails, UserDetails, Users } from "@/app/lib/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -11,8 +10,11 @@ import UserTable from "@/app/components/UserTable";
 import TotalStats from "@/app/components/TotalStats";
 import { getUserStatus } from "@/app/components/UserTable";
 import { ToastContainer, toast } from 'react-toastify';
+import Loading from "@/app/components/Loading";
+import Counter from "@/app/components/Counter";
 
 const AdminDashboard = () => {
+
 
 
 
@@ -97,6 +99,18 @@ const handleSignOut = () => {
   window.location.href = "/adminLogin";
 }
 
+// const handleSendMail = async () => {
+//   try {
+//     const response = await axios.post('/api/email')
+//     console.log(response.data);
+    
+//     }
+//     catch (error) {
+//     console.error("Error sending email:", error);
+//     alert("Failed to send email. Please try again.");
+//   }
+// }
+
 
   useEffect(() => {
     const fetchAdminAndUsers = async () => {
@@ -143,10 +157,10 @@ const handleSignOut = () => {
   if(loading){
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
-        <Spinner />
-        <h1 className="text-2xl text-gray-700 font-bold mt-4">Loading...</h1>
+        <Loading />
+        {/* <h1 className="text-2xl text-gray-700 font-bold mt-4">Loading...</h1> */}
       </div>
-  );
+    );
   }
 
   if (error) {
@@ -162,9 +176,14 @@ const handleSignOut = () => {
     <>
       <div className="min-h-screen bg-gray-200">
         <Navbar handleSignOut={handleSignOut} />
+        {/* <button onClick={handleSendMail} className="bg-blue-500 hover:cursor-pointer text-white px-4 py-2 rounded-md m-4">
+          send mail
+        </button> */}
 
         <div className="body-wrapper container sm:px-6 lg:px-8 mx-auto py-8">
+          
           <Header admin={admin} />
+          < Counter/>
 
           <main className="flex flex-col items-center space-y-8">
             <div className="sub-main">

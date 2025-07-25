@@ -84,8 +84,16 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
                 user.subscription.toLowerCase().includes(searchFilter) ||
                 (user.trainer
                   ? user.trainer.toLowerCase().includes(searchFilter)
-                  : false)
-            );
+                : false))
+                  .sort((a, b) => {
+                  // If a is expired and b is not, a goes after b (returns 1)
+                  // If b is expired and a is not, a goes before b (returns -1)
+                  // If both are expired or both are not, keep their order (returns 0)
+                  const aExpired = getUserStatus(a) === "expired" ? 1 : 0;
+                  const bExpired = getUserStatus(b) === "expired" ? 1 : 0;
+                  return aExpired - bExpired;
+                });
+            
 
     const handleFilter = (db_name:string,name:string) =>{
         setCurrentFilter(db_name)

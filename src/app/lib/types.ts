@@ -38,3 +38,9 @@ export type ModalProps = {
   endDate: string | Date;   // ISO string
   onSet: (startDate: string, endDate: string) => void;
 };
+
+export type CounterProps = {
+  date:string;
+  total:number;
+  current:number;
+};
