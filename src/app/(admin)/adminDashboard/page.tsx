@@ -103,9 +103,10 @@ const handleSignOut = () => {
 //   try {
 //     const response = await axios.post('/api/email')
 //     console.log(response.data);
-    
+//     if(response.status === 200) {
+//       alert("Email sent successfully!");
 //     }
-//     catch (error) {
+//   }catch (error) {
 //     console.error("Error sending email:", error);
 //     alert("Failed to send email. Please try again.");
 //   }
