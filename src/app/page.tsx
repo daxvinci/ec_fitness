@@ -28,7 +28,7 @@ export default function Home() {
         <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-8 drop-shadow-lg tracking-wide text-center">
           ec-fitness
         </h1>
-        <div className="flex flex-col gap-4 w-48">
+        {/* <div className="flex flex-col gap-4 w-48">
           <Link href="/register">
             <button className="w-full hover:cursor-pointer py-3 rounded-lg bg-green-500 text-white font-bold text-lg shadow hover:bg-green-600 transition">
               Register
@@ -39,7 +39,7 @@ export default function Home() {
               Login
             </button>
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );
