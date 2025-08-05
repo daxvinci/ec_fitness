@@ -57,6 +57,7 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
         ]
     
         const tableHeaders = [
+            { name: "S/N" },
             { name: "Name" },
             { name: "Phone Number" },
             { name: "Email" },
@@ -172,8 +173,18 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {Array.isArray(users) && users.length !== 0 ? (
-                  filteredUsers.map((user) => (
+                  filteredUsers.map((user, idx) => (
                     <tr key={user.id}>
+                      <td
+                        className={`whitespace-nowrap px-6 py-4 text-sm 
+                            ${
+                              getUserStatus(user) === "paused"
+                                ? "text-gray-400"
+                                : "text-gray-900"
+                            } `}
+                      >
+                        {idx + 1}
+                      </td>
                       <td
                         className={`whitespace-nowrap px-6 py-4 text-sm 
                             ${
