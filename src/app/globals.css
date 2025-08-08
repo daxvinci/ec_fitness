@@ -26,5 +26,7 @@ body {
 }
 
 .gym-bg{
-  background-image: url("/images/gym_bg.jpg");
+  background-image: url("/images/gymgrass.jpeg");
+  background-size: cover;
+  background-position: 80%;
 }

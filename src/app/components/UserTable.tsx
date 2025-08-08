@@ -117,7 +117,7 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
 
         {/* Filters */}
         <div className="filter-container w-full flex gap-4 sm:flex-row flex-col mb-4 justify-between sm:items-center">
-          <div className="flex gap-0 sm:gap-2 overflow-scroll w-full rounded-lg bg-gray-200 py-1 px-2">
+          <div className="flex gap-0 sm:gap-2 overflow- sm:overflow-auto w-full rounded-lg bg-gray-200 py-1 px-2">
             {filters.map((label, i) => (
               <button
                 key={i}

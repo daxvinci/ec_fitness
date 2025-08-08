@@ -7,13 +7,13 @@ export default function Home() {
       {/* Background image with Next.js Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/gym_bg.jpg"
+          src="/images/gymblack.jpeg"
           alt="Gym background"
           fill
           style={{ objectFit: "cover" }}
           priority
         />
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-black/50" />
       </div>
 
       {/* Admin link top right */}
