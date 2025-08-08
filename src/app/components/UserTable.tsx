@@ -149,7 +149,7 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
           </div>
         </div>
 
-        {filteredUsers.length === 0 && (
+        {filteredUsers.length === 0 && searchFilter !== "" && (
           <div className="w-full text-center py-8 text-gray-500 text-lg font-semibold">
             No members found matching your search
           </div>
