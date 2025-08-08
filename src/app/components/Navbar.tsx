@@ -7,12 +7,12 @@ const Navbar = ({handleSignOut}:{handleSignOut:()=>void}) => {
         <div className="flex h-16 items-center justify-between">
           {/* Left side - Logo and Dashboard */}
           <div className="flex items-center">
-            <div className="shrink-0">
+            <div className="shrink-0 rounded-full overflow-hidden">
               <Image
                 width={20}
                 height={20}
                 className="size-8"
-                src="/images/default avatar illustration.jpg"
+                src="/images/logo.jpeg"
                 alt="EC Fitness Logo"
               />
             </div>
@@ -26,9 +26,9 @@ const Navbar = ({handleSignOut}:{handleSignOut:()=>void}) => {
           </div>
 
           {/* Center - Gym Name */}
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <h1 className="text-white text-xl font-bold">EC Fitness</h1>
-          </div>
+          </div> */}
 
           {/* Right side - Sign Out and Profile Pic */}
           <div className="flex items-center">
