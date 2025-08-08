@@ -116,13 +116,13 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Members</h2>
 
         {/* Filters */}
-        <div className="filter-container w-full flex mb-4 justify-between items-center">
-          <div className="flex gap-2 rounded-lg bg-gray-200 py-1 px-2">
+        <div className="filter-container w-full flex gap-4 sm:flex-row flex-col mb-4 justify-between sm:items-center">
+          <div className="flex gap-0 sm:gap-2 overflow-scroll w-full rounded-lg bg-gray-200 py-1 px-2">
             {filters.map((label, i) => (
               <button
                 key={i}
                 onClick={() => handleFilter(label.db_name, label.name)}
-                className={`px-3 py-1 hover:cursor-pointer text-gray-400  rounded ${
+                className={`px-3 py-1 sm:text-base text-sm hover:cursor-pointer text-gray-400  rounded ${
                   activeFilter === label.name
                     ? "bg-white text-gray-900 font-medium"
                     : "hover:bg-gray-100"
@@ -156,7 +156,7 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
         )}
 
         <div className="max-w-7xl">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto w-full">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>

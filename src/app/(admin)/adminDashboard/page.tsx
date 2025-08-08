@@ -186,11 +186,11 @@ const handleSignOut = () => {
           <Header admin={admin} />
           < Counter/>
 
-          <main className="flex flex-col items-center space-y-8">
-            <div className="sub-main">
+          <main className="flex w-full sm:px-0 px-4 flex-col items-center space-y-8">
+            <div className="sub-main w-full">
               <TotalStats users={users} />
 
-              <div className="bg-white p-4 sm:p-8 rounded-lg shadow-sm border">
+              <div className="bg-white w-full p-4 sm:p-8 rounded-lg shadow-sm border">
                 <UserTable
                   users={users}
                   handlePause={handlePause}
