@@ -106,12 +106,17 @@ const UserRegister = () => {
     try {
       const response = await axios.post("/api/register", form,{ timeout: 20000 });
       if (response.data.success) {
-        const mail = await axios.post("/api/email", {
-          email: form.email,
-          name: form.name,
-        });
-        if (mail.status !== 200) {
-          alert("Failed to send welcome email.Contact support.");
+
+        try {
+          const mail = await axios.post("/api/email", {
+            email: form.email,
+            name: form.name,
+          });
+          if (mail.status !== 200) {
+            alert("Checking email");
+          }
+        } catch {
+          alert("Something wrong.....Failed to send email, but registration succeeded.");
         }
         // localStorage.setItem("token", response.data.token); not storing since no user dashboard
         // setTimeout(()=>{

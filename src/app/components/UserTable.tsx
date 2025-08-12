@@ -117,7 +117,7 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
 
         {/* Filters */}
         <div className="filter-container w-full flex gap-4 sm:flex-row flex-col mb-4 justify-between sm:items-center">
-          <div className="flex gap-0 sm:gap-2 overflow- sm:overflow-auto w-full rounded-lg bg-gray-200 py-1 px-2">
+          <div className="flex sm:flex-nowrap flex-wrap gap-0 sm:gap-2 overflow-auto sm:overflow-auto w-full rounded-lg bg-gray-200 py-1 px-2">
             {filters.map((label, i) => (
               <button
                 key={i}
@@ -155,7 +155,7 @@ const UserTable = ({ users, handleOpenModal,handlePause }: UserTableProps) => {
           </div>
         )}
 
-        <div className="max-w-7xl">
+        <div className="w-full">
           <div className="overflow-x-auto w-full">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
