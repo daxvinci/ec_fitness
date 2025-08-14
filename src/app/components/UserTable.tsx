@@ -25,7 +25,7 @@ type UserTableProps = {
           return Math.ceil(diff / (1000 * 60 * 60 * 24));
         }
   
-        export function getUserStatus(user: UserDetails): string {
+      export function getUserStatus(user: UserDetails): string {
           // If user is paused, keep as paused
           if (user.status === "paused") return "paused";
           // If user is expiring, keep as paused
