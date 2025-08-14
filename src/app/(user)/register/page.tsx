@@ -116,6 +116,7 @@ const UserRegister = () => {
             alert("Checking email");
           }
         } catch {
+          console.error("Email sending error:", error);
           alert("Something wrong.....Failed to send email, but registration succeeded.");
         }
         // localStorage.setItem("token", response.data.token); not storing since no user dashboard
