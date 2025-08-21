@@ -127,7 +127,7 @@ const UserRegister = () => {
         alert(response.data.message || "Registration failed!");
       }
       setIsLoading(false);
-      console.log("Server response:", response.data);
+      // console.log("Server response:", response.data);
     } catch (error) {
       setIsLoading(false);
       if (axios.isAxiosError(error)) {

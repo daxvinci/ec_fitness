@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     const user = await User.findById(userId);
     if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 200 });
+      return NextResponse.json({ message: "User not found" }, { status: 400 });
     }
     // console.log(user);
     return NextResponse.json(
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ message: "error check logs" });
+    return NextResponse.json({ message: "error check logs" },{status:500});
   }
 }
 
